@@ -63,7 +63,7 @@ public class MainMenuPanel extends JPanel {
         JLabel iconLabel = new JLabel();
 
         try {
-            File iconFile = new File("src/main/java/Icons/knight_white.png");
+            File iconFile = new File("src/main/java/Icons/knight_black.png");
             knightIcon = ImageIO.read(iconFile);
         } catch (IOException e) {
             knightIcon = null;
