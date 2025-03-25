@@ -2,6 +2,8 @@ package GUI;
 
 import GUI.Colors.Constants;
 import GUI.Controllers.Controller;
+import GUI.Panels.CreateAccountPanel;
+import GUI.Panels.LoginPanel;
 import GUI.Panels.MainMenuPanel;
 
 import javax.swing.*;
@@ -26,6 +28,7 @@ public class MainGUI extends JFrame {
 
         // Configure JFrame
         this.setTitle("PixelMate");
+        this.setIconImage(new ImageIcon("src/main/java/Icons/knight_black.png").getImage());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(DARK_GREEN);
 
@@ -33,22 +36,21 @@ public class MainGUI extends JFrame {
         CardLayout cardLayout = new CardLayout();
         JPanel container = new JPanel(cardLayout);
 
-        container.setPreferredSize(new Dimension(700, 700));
-        container.setMinimumSize(new Dimension(700, 700));
-        container.setMaximumSize(new Dimension(700, 700));
-
         // Controller
         Controller controller = new Controller(container);
 
         // Add panels to container
         container.add(new MainMenuPanel(controller), "mainmenu");
+        container.add(new LoginPanel(controller), "login");
+        container.add(new CreateAccountPanel(controller), "createaccount");
 
         // Display Main Menu
-        container.setPreferredSize(new Dimension(550, 550));
-        container.setMinimumSize(new Dimension(550, 550));
-        container.setMaximumSize(new Dimension(550, 550));
+        container.setPreferredSize(new Dimension(600, 600));
+        container.setMinimumSize(new Dimension(600, 600));
+        container.setMaximumSize(new Dimension(600, 600));
         cardLayout.show(container, "mainmenu");
 
+        // Make background dark green
         for (Component view:container.getComponents()){
             view.setBackground(DARK_GREEN);
         }
@@ -56,7 +58,7 @@ public class MainGUI extends JFrame {
         // Configure JFrame
         this.setLayout(new GridBagLayout());
         this.add(container);
-        this.setSize(800, 800);
+        this.setSize(600, 600);
         this.setVisible(true);
     }
 
