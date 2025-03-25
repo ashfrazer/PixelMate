@@ -3,6 +3,7 @@ package GUI;
 import GUI.Colors.Constants;
 import GUI.Controllers.Controller;
 import GUI.Panels.CreateAccountPanel;
+import GUI.Panels.CreditsPanel;
 import GUI.Panels.LoginPanel;
 import GUI.Panels.MainMenuPanel;
 
@@ -43,6 +44,7 @@ public class MainGUI extends JFrame {
         container.add(new MainMenuPanel(controller), "mainmenu");
         container.add(new LoginPanel(controller), "login");
         container.add(new CreateAccountPanel(controller), "createaccount");
+        container.add(new CreditsPanel(controller), "credits");
 
         // Display Main Menu
         container.setPreferredSize(new Dimension(600, 600));

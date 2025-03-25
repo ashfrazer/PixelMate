@@ -45,7 +45,7 @@ public class Controller implements ActionListener {
         // Display credits
         else if (command.equals("Credits")) {
             System.out.println("Taking you to Credits!");
-
+            cardLayout.show(container, "credits");
             /*
             CREDITS LOGIC
              */
