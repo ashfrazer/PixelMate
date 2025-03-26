@@ -1,5 +1,6 @@
 package Game.Pieces;
 
+
 public abstract class Piece {
     //Fields
     int row;
