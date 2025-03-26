@@ -55,11 +55,12 @@ public class MainMenuPanel extends JPanel {
 
         // WELCOME LABEL
         JLabel welcomeLabel = new JLabel("Welcome back! What would you like to do next?");
+        welcomeLabel.setMaximumSize(new Dimension(500, 40));
         welcomeLabel.setForeground(Color.BLACK);
         welcomeLabel.setFont(new Font(font.getName(), Font.PLAIN, 30));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // PAWN ICON
+        // KNIGHT ICON
         JLabel iconLabel = new JLabel();
 
         try {
@@ -90,7 +91,7 @@ public class MainMenuPanel extends JPanel {
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
 
         Dimension buttonSize = new Dimension(300, 50);
 
