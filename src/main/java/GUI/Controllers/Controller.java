@@ -14,20 +14,23 @@ import java.io.IOException;
 public class Controller implements ActionListener {
     private JPanel container;
     private Font font;
+    private boolean loginSuccessful;
 
     public Controller(JPanel container) {
         this.container = container;
+        this.loginSuccessful = false;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         CardLayout cardLayout = (CardLayout) container.getLayout();
+        LoginPanel loginPanel = (LoginPanel) container.getComponent(1);
 
         // Go to Login menu
         if (command.equals("Login")) {
             System.out.println("Logging in!");
-
+            loginSuccessful = false;
             /*
             LOGIN LOGIC
              */
@@ -57,10 +60,18 @@ public class Controller implements ActionListener {
         }
         // Submit credentials for validation
         else if (command.equals("Enter")) {
-            LoginPanel loginPanel = (LoginPanel) container.getComponent(1);
             String username = loginPanel.getUsername();
-            System.out.println("Welcome, " + username + "!");
+            String password = loginPanel.getPassword();
 
+            if (username.equals("test") && password.equals("1234")) {
+                loginSuccessful = true;
+                System.out.println("Welcome, " + username + "!");
+                loginPanel.setLoginSuccessful();
+            } else {
+                loginSuccessful = false;
+                loginPanel.setError("Login failed. Please try again.");
+                System.out.println("Login failed.");
+            }
             /*
             LOGIN ATTEMPT LOGIC
              */
@@ -79,6 +90,27 @@ public class Controller implements ActionListener {
                 System.out.println("Password creation failed.");
             }
         }
+        else if (command.equals("Host")) {
+            System.out.println("Now hosting...");
+            loginPanel.setHosting();
+        }
+        else if (command.equals("Join")) {
+            System.out.println("Now joining...");;
+            loginPanel.setJoining();
+        }
+        else if (command.equals("Logout")) {
+            //FIXME
+            // IF LOGIN -> LOGOUT -> LOGIN, USER AUTOMATICALLY LOGS IN
+            // WITHOUT HAVING TO RE-ENTER CREDENTIALS. USER DOES NOT FULLY
+            // LOGOUT. BELIEVED TO BE RELATED TO CURRENT LOGINPANEL STATE.
 
+            System.out.println("Logging out!");
+            loginSuccessful = false;
+            cardLayout.show(container, "mainmenu");
+        }
+        else if (command.equals("Return")) {
+            System.out.println("Going back to menu.");
+            loginPanel.setLoginSuccessful();
+        }
     }
 }

@@ -89,7 +89,6 @@ public class MainMenuPanel extends JPanel {
         // BUTTON PANEL
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
 
