@@ -1,4 +1,4 @@
-package Game.Pieces;
+package edu.uca.swe.Game.Pieces;
 
 
 public abstract class Piece {

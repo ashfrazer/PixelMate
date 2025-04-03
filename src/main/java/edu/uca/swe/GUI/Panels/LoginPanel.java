@@ -1,7 +1,7 @@
-package GUI.Panels;
+package edu.uca.swe.GUI.Panels;
 
-import GUI.Colors.Constants;
-import GUI.Controllers.Controller;
+import edu.uca.swe.GUI.Colors.Constants;
+import edu.uca.swe.GUI.Controllers.Controller;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -76,7 +76,7 @@ public class LoginPanel extends JPanel {
         JLabel iconLabel = new JLabel();
 
         try {
-            File iconFile = new File("src/main/java/Icons/knight_black.png");
+            File iconFile = new File("src/main/java/edu/uca/swe/Icons/knight_black.png");
             knightIcon = ImageIO.read(iconFile);
         } catch (IOException e) {
             knightIcon = null;
@@ -255,8 +255,15 @@ public class LoginPanel extends JPanel {
             }
             credentialsPanel.add(labels[i]);
         }
+        JPanel buttonPanel = new JPanel();
+
         button1.setText("Return");
-        credentialsPanel.add(button1);
+        button2.setText("Start");
+
+        buttonPanel.add(button1);
+        buttonPanel.add(button2);
+
+        credentialsPanel.add(buttonPanel);
         credentialsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
     }
 
@@ -294,8 +301,15 @@ public class LoginPanel extends JPanel {
             }
             credentialsPanel.add(labels[i]);
         }
+        JPanel buttonPanel = new JPanel();
+
         button1.setText("Return");
-        credentialsPanel.add(button1);
+        button2.setText("Start");
+
+        buttonPanel.add(button1);
+        buttonPanel.add(button2);
+
+        credentialsPanel.add(buttonPanel);
         credentialsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
     }
 

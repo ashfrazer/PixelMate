@@ -1,6 +1,6 @@
-package Game;
+package edu.uca.swe.Game;
 
-import Game.Pieces.*;
+import edu.uca.swe.Game.Pieces.*;
 
 public class Board {
     private Piece[][] board;

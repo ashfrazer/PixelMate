@@ -1,15 +1,12 @@
-package GUI.Controllers;
+package edu.uca.swe.GUI.Controllers;
 
-import GUI.Panels.CreateAccountPanel;
-import GUI.Panels.LoginPanel;
-import GUI.Panels.MainMenuPanel;
+import edu.uca.swe.GUI.Panels.CreateAccountPanel;
+import edu.uca.swe.GUI.Panels.LoginPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.io.IOException;
 
 public class Controller implements ActionListener {
     private JPanel container;

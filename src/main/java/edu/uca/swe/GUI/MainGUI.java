@@ -1,11 +1,11 @@
-package GUI;
+package edu.uca.swe.GUI;
 
-import GUI.Colors.Constants;
-import GUI.Controllers.Controller;
-import GUI.Panels.CreateAccountPanel;
-import GUI.Panels.CreditsPanel;
-import GUI.Panels.LoginPanel;
-import GUI.Panels.MainMenuPanel;
+import edu.uca.swe.GUI.Colors.Constants;
+import edu.uca.swe.GUI.Controllers.Controller;
+import edu.uca.swe.GUI.Panels.CreateAccountPanel;
+import edu.uca.swe.GUI.Panels.CreditsPanel;
+import edu.uca.swe.GUI.Panels.LoginPanel;
+import edu.uca.swe.GUI.Panels.MainMenuPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,7 +29,7 @@ public class MainGUI extends JFrame {
 
         // Configure JFrame
         this.setTitle("PixelMate");
-        this.setIconImage(new ImageIcon("src/main/java/Icons/knight_black.png").getImage());
+        this.setIconImage(new ImageIcon("src/main/java/edu/uca/swe/Icons/knight_black.png").getImage());
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setBackground(DARK_GREEN);
 

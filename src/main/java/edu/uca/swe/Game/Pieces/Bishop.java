@@ -1,11 +1,12 @@
-package Game.Pieces;
+package edu.uca.swe.Game.Pieces;
 
 import static java.lang.Math.abs;
 
-public class Queen extends Piece {
+public class Bishop extends Piece {
+
     //Constructor
-    public Queen(String color, int startRow, int startCol){
-        super(startRow,startCol,color);
+    public Bishop(String color, int startRow, int startCol) {
+        super(startRow, startCol, color);
     }
 
     //Checks to make sure move is valid and if so sets the pieces' new position and passes turn
@@ -13,9 +14,10 @@ public class Queen extends Piece {
         int currentRow = getRow();
         int currentCol = getCol();
 
-        // Queens can move like Rooks or Bishops
-        if (((currentRow == toRow && currentCol != toCol ) || (currentCol == toCol && currentRow != toRow)) ||
-                (abs(toRow - currentRow) == abs(toCol - currentCol))){
+        //Bishops can move horizontally so the absolute difference of
+        //their next position minus their current position should be the
+        //same for both Row and Col.
+        if (abs(toRow - currentRow) == abs(toCol - currentCol)) {
 
             //I think all of these todos could come from the Rules() class
             //todo: add check to make sure King is not in Check or if in check move will block check

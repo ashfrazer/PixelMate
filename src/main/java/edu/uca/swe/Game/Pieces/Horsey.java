@@ -1,10 +1,12 @@
-package Game.Pieces;
+package edu.uca.swe.Game.Pieces;
 
-public class Rook extends Piece {
+import static java.lang.Math.abs;
+
+public class Horsey  extends Piece{
 
     //Constructor
-    public Rook(String color, int startRow, int startCol){
-        super(startRow,startCol,color);
+    public Horsey(String color, int startRow, int startCol) {
+        super(startRow, startCol, color);
     }
 
     //Checks to make sure move is valid and if so sets the pieces' new position and passes turn
@@ -12,13 +14,14 @@ public class Rook extends Piece {
         int currentRow = getRow();
         int currentCol = getCol();
 
-        //Rooks can move on the same row or the same col but not both
-        if ((currentRow == toRow && currentCol != toCol ) || (currentCol == toCol && currentRow != toRow)){
+        //Horseys can move in one direction 1 space and in a perpendicular direction 2 spaces
+        //Horseys can also jump over pieces so no checks for collisions needed.
+        if ((abs(currentRow - toRow) == 1 && abs(currentCol - toCol) == 2) ||
+                (abs(currentRow - toRow) == 2 && abs(currentCol - toCol) == 1)) {
 
             //I think all of these todos could come from the Rules() class
             //todo: add check to make sure King is not in Check or if in check move will block check
             //todo: add logic to make sure move wont put our king in Check
-            //todo: add logic to make sure not moving through another Piece
             setPosition(toRow, toCol);
             //todo: add logic to take a piece if positions overlap
             //todo: pass the turn to next player

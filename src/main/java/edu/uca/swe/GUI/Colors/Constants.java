@@ -1,4 +1,4 @@
-package GUI.Colors;
+package edu.uca.swe.GUI.Colors;
 
 import java.awt.*;
 import java.io.File;
