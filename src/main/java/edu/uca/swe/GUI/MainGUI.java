@@ -2,10 +2,7 @@ package edu.uca.swe.GUI;
 
 import edu.uca.swe.GUI.Colors.Constants;
 import edu.uca.swe.GUI.Controllers.Controller;
-import edu.uca.swe.GUI.Panels.CreateAccountPanel;
-import edu.uca.swe.GUI.Panels.CreditsPanel;
-import edu.uca.swe.GUI.Panels.LoginPanel;
-import edu.uca.swe.GUI.Panels.MainMenuPanel;
+import edu.uca.swe.GUI.Panels.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,6 +42,7 @@ public class MainGUI extends JFrame {
         container.add(new LoginPanel(controller), "login");
         container.add(new CreateAccountPanel(controller), "createaccount");
         container.add(new CreditsPanel(controller), "credits");
+        container.add(new GamePanel(controller), "game");
 
         // Display Main Menu
         container.setPreferredSize(new Dimension(600, 600));

@@ -1,6 +1,9 @@
 package edu.uca.swe.GUI.Colors;
 
+import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -11,6 +14,8 @@ public class Constants {
     public static final Color CREAM = new Color(254, 250, 224);
 
     public static final Font FONT = loadFont();
+
+    public static final ImageIcon board = new ImageIcon(loadBoard());
 
     private Constants() {}
 
@@ -25,4 +30,14 @@ public class Constants {
             return new Font("Arial", Font.PLAIN, 12);
         }
     }
+
+    private static BufferedImage loadBoard() {
+        try {
+            File iconFile = new File("src/main/java/edu/uca/swe/Icons/board.png");
+            return ImageIO.read(iconFile);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
 }

@@ -109,5 +109,9 @@ public class Controller implements ActionListener {
             System.out.println("Going back to menu.");
             loginPanel.setLoginSuccessful();
         }
+        else if (command.equals("Start")) {
+            System.out.println("Starting game!");
+            cardLayout.show(container, "game");
+        }
     }
 }
