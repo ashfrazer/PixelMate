@@ -5,13 +5,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Properties;
-import java.util.Map.Entry;
 
 public class Database {
     private Connection connection;
     private FileInputStream fis = null;
     private FileOutputStream fos = null;
-    HashMap<String, String> database;
 
     public Database() {
         Properties prop = new Properties();
@@ -75,20 +73,20 @@ public class Database {
     }
 
     // Method for verifying a username and password.
-    public boolean verifyAccount(String username, String password)
-    {
-        // Read the database file.
-        readFile();
+    public boolean verifyAccount(String username, String password) {
+        try {
+            String query = "SELECT * FROM users WHERE username = ? AND password = ?";
+            PreparedStatement stmt = connection.prepareStatement(query);
+            stmt.setString(1, username);
+            stmt.setString(2, password);
 
-        // Stop if this account doesn't exist.
-        if (database.get(username) == null)
-            return false;
+            ResultSet rs = stmt.executeQuery();
 
-        // Check the username and password.
-        if (database.get(username).equals(password))
-            return true;
-        else
+            return rs.next(); // returns true if a record is found
+        } catch (SQLException e) {
+            e.printStackTrace();
             return false;
+        }
     }
 
     public boolean createNewAccount(String username, String password) {
@@ -117,31 +115,6 @@ public class Database {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
-        }
-    }
-
-    public synchronized void readFile() {
-        database = new HashMap<String, String>();
-
-        try {
-            fis = new FileInputStream("database.txt");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(fis));
-
-            String line = reader.readLine();
-            while(line != null) {
-                String[] data = line.split("\\|");
-
-                if (data.length == 2)
-                    database.put(data[0], data[1]);
-
-                line = reader.readLine();
-            }
-
-            fis.close();
-        }
-
-        catch (Exception exception) {
-            return;
         }
     }
 }
