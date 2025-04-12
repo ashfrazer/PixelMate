@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:11
+    container_name: pixelmate-db
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpass
+      MARIADB_DATABASE: pixelmate_login
+      MARIADB_USER: player
+      MARIADB_PASSWORD: letsplaychess2025
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+  app:
+    build: .
+    container_name: pixelmate-app
+    depends_on:
+      - mariadb
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_URL=jdbc:mysql://mariadb:3306/pixelmate_login
+      - DB_USER=player
+      - DB_PASSWORD=letsplaychess2025
+    networks:
+      - pixelmate-network
+
+volumes:
+  mariadb_data:
+
+networks:
+  pixelmate-network:
+    driver: bridge

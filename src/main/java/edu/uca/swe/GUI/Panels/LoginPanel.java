@@ -2,6 +2,7 @@ package edu.uca.swe.GUI.Panels;
 
 import edu.uca.swe.GUI.Colors.Constants;
 import edu.uca.swe.GUI.Controllers.Controller;
+import edu.uca.swe.Game.Database.Database;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,15 +21,12 @@ public class LoginPanel extends JPanel {
     private BufferedImage knightIcon;
     private JTextField usernameField;
     private JPasswordField passwordField;
-    private JButton button1, button2, button3;
+    private JButton button1, button2;
     private JLabel messageLabel;
     private JPanel credentialsPanel;
+    private Database database;
 
     public LoginPanel(Controller controller) {
-        //TODO
-        // CLEAN UP AND MAKE CODE DRY. POSSIBLY DIVIDE HOST/JOIN/LOGOUT
-        // INTO NEW PANEL FOR CONSISTENCY.
-
         // Initialize controller
         this.controller = controller;
 
@@ -74,14 +72,12 @@ public class LoginPanel extends JPanel {
 
         // KNIGHT ICON
         JLabel iconLabel = new JLabel();
-
         try {
             File iconFile = new File("src/main/java/edu/uca/swe/Icons/knight_black.png");
             knightIcon = ImageIO.read(iconFile);
         } catch (IOException e) {
             knightIcon = null;
         }
-
         ImageIcon icon = new ImageIcon(knightIcon);
         iconLabel.setIcon(icon);
         iconLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -128,7 +124,6 @@ public class LoginPanel extends JPanel {
 
         // BACK BUTTON
         Dimension buttonSize = new Dimension(200, 50);
-
         button1 = new JButton("Back");
         button1.setBackground(BROWN);
         button1.setForeground(Color.BLACK);
@@ -140,7 +135,7 @@ public class LoginPanel extends JPanel {
         button1.setAlignmentX(Component.CENTER_ALIGNMENT);
         button1.addActionListener(controller);
 
-        // ENTER BUTTON
+        // LOGIN BUTTON
         button2 = new JButton("Enter");
         button2.setBackground(BROWN);
         button2.setForeground(Color.BLACK);
@@ -151,19 +146,6 @@ public class LoginPanel extends JPanel {
         button2.setMaximumSize(buttonSize);
         button2.setAlignmentX(Component.CENTER_ALIGNMENT);
         button2.addActionListener(controller);
-
-        // BUTTON 3
-        button3 = new JButton();
-        button3.setBackground(BROWN);
-        button3.setForeground(Color.BLACK);
-        button3.setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
-        button3.setFont(new Font(font.getName(), Font.PLAIN, 30));
-        button3.setFocusPainted(false);
-        button3.setPreferredSize(buttonSize);
-        button3.setMaximumSize(buttonSize);
-        button3.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button3.addActionListener(controller);
-
         // ADD FIELDS TO CREDENTIALS PANEL
         Dimension padding = new Dimension(100, 30);
         credentialsPanel.add(usernameLabel);
@@ -176,142 +158,158 @@ public class LoginPanel extends JPanel {
         credentialsPanel.add(Box.createRigidArea(padding));
         credentialsPanel.add(button1);
         credentialsPanel.add(button2);
+
+        // Initialize the database object
+        database = new Database();
     }
 
-    public void setLoginSuccessful() {
-        // Update message
-        messageLabel.setText("Welcome back, " + usernameField.getText() + "!");
-        messageLabel.setForeground(Color.BLACK);
+    private void handleLogin() {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
 
-        // Update button texts
-        button1.setText("Host");
-        button2.setText("Join");
-        button3.setText("Logout");
-
-        // Clear credentialsPanel
-        credentialsPanel.removeAll();
-
-        // Refresh display
-        revalidate();
-        repaint();
-
-        // Reset credential panel
-        credentialsPanel.setLayout(new BoxLayout(credentialsPanel, BoxLayout.Y_AXIS));
-        credentialsPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
-
-        // Configure buttons
-        Dimension buttonSize = new Dimension(300, 50);
-
-        button1.setPreferredSize(buttonSize);
-        button1.setMaximumSize(buttonSize);
-        button1.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        button2.setPreferredSize(buttonSize);
-        button2.setMaximumSize(buttonSize);
-        button2.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        button3.setPreferredSize(buttonSize);
-        button3.setMaximumSize(buttonSize);
-        button3.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Add buttons to credentialsPanel
-        credentialsPanel.add(button1);
-        credentialsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        credentialsPanel.add(button2);
-        credentialsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        credentialsPanel.add(button3);
-    }
-
-    public void setHosting() {
-        // Update message
-        messageLabel.setText("Waiting for player...");
-
-        // Remove components
-        credentialsPanel.removeAll();
-
-        // Refresh display
-        revalidate();
-        repaint();
-
-        credentialsPanel.setLayout(new BoxLayout(credentialsPanel, BoxLayout.Y_AXIS));
-        JLabel[] labels = new JLabel[3];
-        for (int i = 0; i < labels.length; i++) {
-            labels[i] = new JLabel();
-            labels[i].setFont(new Font(font.getName(), Font.PLAIN, 30));
-            labels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
-            labels[i].setForeground(Color.BLACK);
-            labels[i].setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-            switch(i) {
-                case 0:
-                    labels[i].setText("PLAYERS");
-                    labels[i].setFont(new Font(font.getName(), Font.BOLD, 45));
-                    break;
-                case 1:
-                    labels[i].setText(getUsername() + " (host)");
-                    break;
-                case 2:
-                    labels[i].setText("Waiting...");
-                    break;
-            }
-            credentialsPanel.add(labels[i]);
+        // Use the database to authenticate the user
+        if (database.verifyAccount(username, password)) {
+            messageLabel.setText("Login successful!");
+            // Proceed to the next screen or main menu
+        } else {
+            messageLabel.setText("Invalid username or password.");
         }
-        JPanel buttonPanel = new JPanel();
-
-        button1.setText("Return");
-        button2.setText("Start");
-
-        buttonPanel.add(button1);
-        buttonPanel.add(button2);
-
-        credentialsPanel.add(buttonPanel);
-        credentialsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
     }
 
-    public void setJoining() {
-        // Update message
-        messageLabel.setText("Waiting for host...");
-
-        // Remove components
-        credentialsPanel.removeAll();
-
-        // Refresh display
-        revalidate();
-        repaint();
-
-        credentialsPanel.setLayout(new BoxLayout(credentialsPanel, BoxLayout.Y_AXIS));
-
-        JLabel[] labels = new JLabel[3];
-        for (int i = 0; i < labels.length; i++) {
-            labels[i] = new JLabel();
-            labels[i].setFont(new Font(font.getName(), Font.PLAIN, 30));
-            labels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
-            labels[i].setForeground(Color.BLACK);
-            labels[i].setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
-            switch(i) {
-                case 0:
-                    labels[i].setText("PLAYERS");
-                    labels[i].setFont(new Font(font.getName(), Font.BOLD, 45));
-                    break;
-                case 1:
-                    labels[i].setText("Waiting (host)...");
-                    break;
-                case 2:
-                    labels[i].setText(getUsername());
-                    break;
-            }
-            credentialsPanel.add(labels[i]);
-        }
-        JPanel buttonPanel = new JPanel();
-
-        button1.setText("Return");
-        button2.setText("Start");
-
-        buttonPanel.add(button1);
-        buttonPanel.add(button2);
-
-        credentialsPanel.add(buttonPanel);
-        credentialsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
-    }
+//    public void setLoginSuccessful() {
+//        // Update message
+//        messageLabel.setText("Welcome back, " + usernameField.getText() + "!");
+//        messageLabel.setForeground(Color.BLACK);
+//
+//        // Update button texts
+//        button1.setText("Host");
+//        button2.setText("Join");
+//        button3.setText("Logout");
+//
+//        // Clear credentialsPanel
+//        credentialsPanel.removeAll();
+//
+//        // Refresh display
+//        revalidate();
+//        repaint();
+//
+//        // Reset credential panel
+//        credentialsPanel.setLayout(new BoxLayout(credentialsPanel, BoxLayout.Y_AXIS));
+//        credentialsPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
+//
+//        // Configure buttons
+//        Dimension buttonSize = new Dimension(300, 50);
+//
+//        button1.setPreferredSize(buttonSize);
+//        button1.setMaximumSize(buttonSize);
+//        button1.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//        button2.setPreferredSize(buttonSize);
+//        button2.setMaximumSize(buttonSize);
+//        button2.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//        button3.setPreferredSize(buttonSize);
+//        button3.setMaximumSize(buttonSize);
+//        button3.setAlignmentX(Component.CENTER_ALIGNMENT);
+//
+//        // Add buttons to credentialsPanel
+//        credentialsPanel.add(button1);
+//        credentialsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+//        credentialsPanel.add(button2);
+//        credentialsPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+//        credentialsPanel.add(button3);
+//    }
+//
+//    public void setHosting() {
+//        // Update message
+//        messageLabel.setText("Waiting for player...");
+//
+//        // Remove components
+//        credentialsPanel.removeAll();
+//
+//        // Refresh display
+//        revalidate();
+//        repaint();
+//
+//        credentialsPanel.setLayout(new BoxLayout(credentialsPanel, BoxLayout.Y_AXIS));
+//        JLabel[] labels = new JLabel[3];
+//        for (int i = 0; i < labels.length; i++) {
+//            labels[i] = new JLabel();
+//            labels[i].setFont(new Font(font.getName(), Font.PLAIN, 30));
+//            labels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+//            labels[i].setForeground(Color.BLACK);
+//            labels[i].setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+//            switch(i) {
+//                case 0:
+//                    labels[i].setText("PLAYERS");
+//                    labels[i].setFont(new Font(font.getName(), Font.BOLD, 45));
+//                    break;
+//                case 1:
+//                    labels[i].setText(getUsername() + " (host)");
+//                    break;
+//                case 2:
+//                    labels[i].setText("Waiting...");
+//                    break;
+//            }
+//            credentialsPanel.add(labels[i]);
+//        }
+//        JPanel buttonPanel = new JPanel();
+//
+//        button1.setText("Return");
+//        button2.setText("Start");
+//
+//        buttonPanel.add(button1);
+//        buttonPanel.add(button2);
+//
+//        credentialsPanel.add(buttonPanel);
+//        credentialsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+//    }
+//
+//    public void setJoining() {
+//        // Update message
+//        messageLabel.setText("Waiting for host...");
+//
+//        // Remove components
+//        credentialsPanel.removeAll();
+//
+//        // Refresh display
+//        revalidate();
+//        repaint();
+//
+//        credentialsPanel.setLayout(new BoxLayout(credentialsPanel, BoxLayout.Y_AXIS));
+//
+//        JLabel[] labels = new JLabel[3];
+//        for (int i = 0; i < labels.length; i++) {
+//            labels[i] = new JLabel();
+//            labels[i].setFont(new Font(font.getName(), Font.PLAIN, 30));
+//            labels[i].setAlignmentX(Component.CENTER_ALIGNMENT);
+//            labels[i].setForeground(Color.BLACK);
+//            labels[i].setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
+//            switch(i) {
+//                case 0:
+//                    labels[i].setText("PLAYERS");
+//                    labels[i].setFont(new Font(font.getName(), Font.BOLD, 45));
+//                    break;
+//                case 1:
+//                    labels[i].setText("Waiting (host)...");
+//                    break;
+//                case 2:
+//                    labels[i].setText(getUsername());
+//                    break;
+//            }
+//            credentialsPanel.add(labels[i]);
+//        }
+//        JPanel buttonPanel = new JPanel();
+//
+//        button1.setText("Return");
+//        button2.setText("Start");
+//
+//        buttonPanel.add(button1);
+//        buttonPanel.add(button2);
+//
+//        credentialsPanel.add(buttonPanel);
+//        credentialsPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
+//    }
 
     public void setError(String msg) {
         messageLabel.setText(msg);
