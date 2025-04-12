@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class MainMenuPanel extends JPanel {
+public class PlayMenuPanel extends JPanel {
     private Color BROWN;
     private Color DARK_GREEN;
     private Color LIGHT_GREEN;
@@ -18,8 +18,8 @@ public class MainMenuPanel extends JPanel {
     private Font font;
     private BufferedImage knightIcon;
 
-    public MainMenuPanel(Controller controller) {
-        // Initialize constants
+    public PlayMenuPanel(Controller controller) {
+        // Load constants
         BROWN = Constants.BROWN;
         DARK_GREEN = Constants.DARK_GREEN;
         LIGHT_GREEN = Constants.LIGHT_GREEN;
@@ -44,7 +44,7 @@ public class MainMenuPanel extends JPanel {
         labelPanel.setOpaque(false);
 
         JLabel titleLabel = createLabel("PixelMate", 80, true);
-        JLabel welcomeLabel = createLabel("Welcome back! What would you like to do next?", 30, false);
+        JLabel welcomeLabel = createLabel("Select an option.", 30, false);
 
         JLabel iconLabel = new JLabel();
         try {
@@ -67,11 +67,12 @@ public class MainMenuPanel extends JPanel {
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
 
-        buttonPanel.add(createMenuButton("Login", controller));
+        // Add buttons with spacing
+        buttonPanel.add(createMenuButton("Host", controller));
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonPanel.add(createMenuButton("Create Account", controller));
+        buttonPanel.add(createMenuButton("Join", controller));
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonPanel.add(createMenuButton("Credits", controller));
+        buttonPanel.add(createMenuButton("Logout", controller));
     }
 
     private JLabel createLabel(String text, int size, boolean bold) {

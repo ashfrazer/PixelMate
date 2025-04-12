@@ -42,6 +42,8 @@ public class MainGUI extends JFrame {
         container.add(new LoginPanel(controller), "login");
         container.add(new CreateAccountPanel(controller), "createaccount");
         container.add(new CreditsPanel(controller), "credits");
+        container.add(new PlayMenuPanel(controller), "playmenu");
+        container.add(new HostPanel(controller), "host");
         container.add(new GamePanel(controller), "game");
 
         // Display Main Menu

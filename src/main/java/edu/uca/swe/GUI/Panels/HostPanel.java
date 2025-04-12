@@ -10,7 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class MainMenuPanel extends JPanel {
+public class HostPanel extends JPanel {
     private Color BROWN;
     private Color DARK_GREEN;
     private Color LIGHT_GREEN;
@@ -18,8 +18,8 @@ public class MainMenuPanel extends JPanel {
     private Font font;
     private BufferedImage knightIcon;
 
-    public MainMenuPanel(Controller controller) {
-        // Initialize constants
+    public HostPanel(Controller controller) {
+        // Load constants
         BROWN = Constants.BROWN;
         DARK_GREEN = Constants.DARK_GREEN;
         LIGHT_GREEN = Constants.LIGHT_GREEN;
@@ -44,7 +44,7 @@ public class MainMenuPanel extends JPanel {
         labelPanel.setOpaque(false);
 
         JLabel titleLabel = createLabel("PixelMate", 80, true);
-        JLabel welcomeLabel = createLabel("Welcome back! What would you like to do next?", 30, false);
+        JLabel subLabel = createLabel("Hosting a game.", 30, false);
 
         JLabel iconLabel = new JLabel();
         try {
@@ -58,20 +58,39 @@ public class MainMenuPanel extends JPanel {
         labelPanel.add(titleLabel);
         labelPanel.add(iconLabel);
         labelPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        labelPanel.add(welcomeLabel);
+        labelPanel.add(subLabel);
         northPanel.add(labelPanel, BorderLayout.CENTER);
+
+        // CENTER PANEL
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 0, 0));
+        centerPanel.setOpaque(false);
+
+        JLabel playersLabel = createLabel("Players:", 26, true);
+        JLabel hostLabel = createLabel("You (host)", 24, false);
+        JLabel waitingLabel = createLabel("waiting...", 24, false);
+
+        centerPanel.add(playersLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(hostLabel);
+        centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        centerPanel.add(waitingLabel);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
 
         // BUTTON PANEL
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(40, 0, 0, 0));
-        mainPanel.add(buttonPanel, BorderLayout.CENTER);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(30, 0, 30, 0));
+        buttonPanel.setOpaque(false);
 
-        buttonPanel.add(createMenuButton("Login", controller));
+        JButton returnButton = createMenuButton("Return", controller);
+        JButton startButton = createMenuButton("Start", controller);
+
+        buttonPanel.add(returnButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonPanel.add(createMenuButton("Create Account", controller));
-        buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
-        buttonPanel.add(createMenuButton("Credits", controller));
+        buttonPanel.add(startButton);
+        mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
     private JLabel createLabel(String text, int size, boolean bold) {

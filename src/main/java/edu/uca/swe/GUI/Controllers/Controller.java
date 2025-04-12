@@ -14,12 +14,13 @@ public class Controller implements ActionListener {
     private JPanel container;
     private Font font;
     private boolean loginSuccessful;
-    private Database database;  // Database instance
+    private Database database;
+    private String username;
 
     public Controller(JPanel container) {
         this.container = container;
         this.loginSuccessful = false;
-        this.database = new Database();  // Initialize the Database instance
+        this.database = new Database();
     }
 
     @Override
@@ -54,13 +55,12 @@ public class Controller implements ActionListener {
             String username = loginPanel.getUsername();
             String password = loginPanel.getPassword();
 
-            System.out.println("Entered password: " + password);
-            System.out.println("Stored password: " + password);
-
-            // Use the Database class to verify the login
+            // Verify login
             if (validateLogin(username, password)) {
                 loginSuccessful = true;
                 System.out.println("Welcome, " + username + "!");
+                setUsername(username);
+                cardLayout.show(container, "playmenu");
             } else {
                 loginSuccessful = false;
                 loginPanel.setError("Login failed. Please try again.");
@@ -77,6 +77,7 @@ public class Controller implements ActionListener {
                 boolean accountCreated = database.createNewAccount(username, createAccountPanel.getPassword());
                 if (accountCreated) {
                     System.out.println("Welcome aboard, " + username + "!");
+                    setUsername(username);
                 } else {
                     System.out.println("Account creation failed.");
                 }
@@ -86,6 +87,7 @@ public class Controller implements ActionListener {
         }
         else if (command.equals("Host")) {
             System.out.println("Now hosting...");
+            cardLayout.show(container, "host");
         }
         else if (command.equals("Join")) {
             System.out.println("Now joining...");
@@ -118,16 +120,16 @@ public class Controller implements ActionListener {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Get the stored password (plain text)
+                // Get the stored password
                 String storedPassword = rs.getString("password");
 
-                // Compare the stored password with the entered password
+                // Compare the stored password with entered password
                 if (storedPassword.equals(password)) {
                     isValid = true;
                 }
             }
 
-            // Close resources
+            // Close SQL objs
             rs.close();
             stmt.close();
             conn.close();
@@ -137,5 +139,12 @@ public class Controller implements ActionListener {
         }
 
         return isValid;
+    }
+
+    private void setUsername(String username) {
+        this.username = username;
+    }
+    private String getUsername() {
+        return username;
     }
 }

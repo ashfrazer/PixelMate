@@ -189,9 +189,6 @@ public class CreateAccountPanel extends JPanel {
         return new String(confirmPasswordField.getPassword());
     }
     public boolean verifyPassword() {
-        //TODO
-        // NEED TO ADD LOGIC TO CHECK FOR EXISTING USERS IN DATABASE
-
         String passwordField1 = getPassword();
         String passwordField2 = getConfirmPassword();
         if ((!passwordField1.equals(passwordField2)) || !(passwordField1.length() >= 6)) {
