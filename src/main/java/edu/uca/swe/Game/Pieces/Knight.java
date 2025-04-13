@@ -2,10 +2,10 @@ package edu.uca.swe.Game.Pieces;
 
 import static java.lang.Math.abs;
 
-public class Horsey  extends Piece{
+public class Knight extends Piece{
 
     //Constructor
-    public Horsey(String color, int startRow, int startCol) {
+    public Knight(String color, int startRow, int startCol) {
         super(startRow, startCol, color);
     }
 

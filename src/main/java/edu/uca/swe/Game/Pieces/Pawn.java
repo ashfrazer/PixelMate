@@ -2,9 +2,9 @@ package edu.uca.swe.Game.Pieces;
 
 import static java.lang.Math.abs;
 
-public class TheMightyPawn extends Piece {
+public class Pawn extends Piece {
     //Constructor
-    public TheMightyPawn(String color, int startRow, int startCol){
+    public Pawn(String color, int startRow, int startCol){
         super(startRow,startCol,color);
     }
 
