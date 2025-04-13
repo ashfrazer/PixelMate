@@ -2,7 +2,7 @@ package edu.uca.swe.GUI.Controllers;
 
 import edu.uca.swe.GUI.Panels.CreateAccountPanel;
 import edu.uca.swe.GUI.Panels.LoginPanel;
-import edu.uca.swe.Game.Database.Database;  // Import the Database class
+import edu.uca.swe.Game.Database.Database;
 import edu.uca.swe.GUI.Panels.GamePanel;
 
 import javax.swing.*;
@@ -18,6 +18,8 @@ public class Controller implements ActionListener {
     private Database database;
     private String username;
     private String playerRole;
+    private edu.uca.swe.Game.Connection.Client client;
+    private edu.uca.swe.Game.Connection.Server server;
 
     public Controller(JPanel container) {
         this.container = container;
@@ -90,12 +92,53 @@ public class Controller implements ActionListener {
         else if (command.equals("Host")) {
             System.out.println("Now hosting...");
             playerRole = "host";
+
+            new Thread(() -> {
+                server = new edu.uca.swe.Game.Connection.Server(5555);
+                try {
+                    server.listen();
+                    System.out.println("Server listening...");
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }).start();
+
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+
+            client = new edu.uca.swe.Game.Connection.Client("localhost", 5555);
+            try {
+                client.openConnection();
+                client.sendToServer("host");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
             cardLayout.show(container, "host");
         }
         else if (command.equals("Join")) {
             System.out.println("Now joining...");
             playerRole = "client";
-            cardLayout.show(container, "join");
+
+            String hostIP = JOptionPane.showInputDialog(container, "Enter the host IP address:", "Join Game", JOptionPane.QUESTION_MESSAGE);
+
+            if (hostIP != null && !hostIP.trim().isEmpty()) {
+                try {
+                    edu.uca.swe.Game.Connection.Client client = new edu.uca.swe.Game.Connection.Client(hostIP.trim(), 5555);
+                    client.openConnection();
+                    System.out.println("Connected to server at " + hostIP);
+                    this.client = client;
+                    cardLayout.show(container, "join");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(container, "Failed to connect to host: " + ex.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
+            } else {
+                System.out.println("Join cancelled or invalid IP.");
+            }
         }
         else if (command.equals("Logout")) {
             System.out.println("Logging out!");

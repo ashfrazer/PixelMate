@@ -11,7 +11,14 @@ public class Client extends AbstractClient {
     @Override
     protected void handleMessageFromServer(Object msg) {
         System.out.println("Message from server: " + msg.toString());
+
+        if (msg.toString().contains("white")) {
+            System.out.println("Client is white!");
+        } else if (msg.toString().contains("black")) {
+            System.out.println("Client is black!");
+        }
     }
+
 
     public void sendMove(Object move) {
         try {
