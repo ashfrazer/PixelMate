@@ -3,6 +3,7 @@ package edu.uca.swe.GUI.Controllers;
 import edu.uca.swe.GUI.Panels.CreateAccountPanel;
 import edu.uca.swe.GUI.Panels.LoginPanel;
 import edu.uca.swe.Game.Database.Database;  // Import the Database class
+import edu.uca.swe.GUI.Panels.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,11 +17,13 @@ public class Controller implements ActionListener {
     private boolean loginSuccessful;
     private Database database;
     private String username;
+    private String playerRole;
 
     public Controller(JPanel container) {
         this.container = container;
         this.loginSuccessful = false;
         this.database = new Database();
+        this.playerRole = "";
     }
 
     @Override
@@ -73,7 +76,6 @@ public class Controller implements ActionListener {
             String username = createAccountPanel.getUsername();
             boolean isVerified = createAccountPanel.verifyPassword();
             if (isVerified) {
-                // Register the new account in the database
                 boolean accountCreated = database.createNewAccount(username, createAccountPanel.getPassword());
                 if (accountCreated) {
                     System.out.println("Welcome aboard, " + username + "!");
@@ -87,10 +89,13 @@ public class Controller implements ActionListener {
         }
         else if (command.equals("Host")) {
             System.out.println("Now hosting...");
+            playerRole = "host";
             cardLayout.show(container, "host");
         }
         else if (command.equals("Join")) {
             System.out.println("Now joining...");
+            playerRole = "client";
+            cardLayout.show(container, "join");
         }
         else if (command.equals("Logout")) {
             System.out.println("Logging out!");
@@ -99,12 +104,16 @@ public class Controller implements ActionListener {
         }
         else if (command.equals("Return")) {
             System.out.println("Going back to menu.");
+            cardLayout.show(container, "playmenu");
         }
         else if (command.equals("Start")) {
             System.out.println("Starting game!");
+            GamePanel gamePanel = new GamePanel(this, playerRole);
+            container.add(gamePanel, "game");
             cardLayout.show(container, "game");
         }
     }
+
     private boolean validateLogin(String username, String password) {
         boolean isValid = false;
 
@@ -144,7 +153,13 @@ public class Controller implements ActionListener {
     private void setUsername(String username) {
         this.username = username;
     }
+
     private String getUsername() {
         return username;
     }
+
+    public String getPlayerRole() {
+        return playerRole;
+    }
+
 }

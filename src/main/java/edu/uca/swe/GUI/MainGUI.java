@@ -37,6 +37,9 @@ public class MainGUI extends JFrame {
         // Controller
         Controller controller = new Controller(container);
 
+        // Get player role
+        String playerRole = controller.getPlayerRole();
+
         // Add panels to container
         container.add(new MainMenuPanel(controller), "mainmenu");
         container.add(new LoginPanel(controller), "login");
@@ -44,7 +47,8 @@ public class MainGUI extends JFrame {
         container.add(new CreditsPanel(controller), "credits");
         container.add(new PlayMenuPanel(controller), "playmenu");
         container.add(new HostPanel(controller), "host");
-        container.add(new GamePanel(controller), "game");
+        container.add(new JoinPanel(controller), "join");
+        container.add(new GamePanel(controller, playerRole), "game");
 
         // Display Main Menu
         container.setPreferredSize(new Dimension(600, 600));
