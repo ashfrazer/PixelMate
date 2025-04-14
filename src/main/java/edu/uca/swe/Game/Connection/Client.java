@@ -1,20 +1,29 @@
 package edu.uca.swe.Game.Connection;
 
+import edu.uca.swe.GUI.Controllers.Controller;
+import edu.uca.swe.GUI.Panels.GamePanel;
 import edu.uca.swe.GUI.Panels.HostPanel;
 import edu.uca.swe.GUI.Panels.JoinPanel;
 import ocsf.client.AbstractClient;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Client extends AbstractClient {
 
     private String username;
     private HostPanel hostPanel;
     private JoinPanel joinPanel;
+    private GamePanel gamePanel;
+    private JPanel container;
+    private CardLayout cardLayout;
+    private Controller controller;
 
-    public Client(String host, int port, String username) {
+    public Client(String host, int port, String username, JPanel container, CardLayout cardLayout) {
         super(host, port);
         this.username = username;
+        this.container = container;
+        this.cardLayout = cardLayout;
     }
 
     public void handleMessageFromServer(Object msg) {
@@ -39,8 +48,17 @@ public class Client extends AbstractClient {
                     joinPanel.updateWaitingLabel(host);
                 }
             });
+        } else if (message.equals("start")) {
+            SwingUtilities.invokeLater(() -> {
+                if (gamePanel == null) {
+                    gamePanel = new GamePanel(controller, "client");
+                    container.add(gamePanel, "game");
+                }
+                cardLayout.show(container, "game");
+            });
         }
     }
+
 
     public void setHostPanel(HostPanel hostPanel) {
         this.hostPanel = hostPanel;
@@ -48,6 +66,10 @@ public class Client extends AbstractClient {
 
     public void setJoinPanel(JoinPanel joinPanel) {
         this.joinPanel = joinPanel;
+    }
+
+    public void setGamePanel(GamePanel gamePanel) {
+        this.gamePanel = gamePanel;
     }
 
     public void sendMove(Object move) {

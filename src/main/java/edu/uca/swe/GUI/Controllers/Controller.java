@@ -7,7 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.sql.*;
+import java.util.Objects;
 
 public class Controller implements ActionListener {
     private JPanel container;
@@ -33,6 +35,7 @@ public class Controller implements ActionListener {
         LoginPanel loginPanel = (LoginPanel) container.getComponent(1);
         HostPanel hostPanel = (HostPanel) container.getComponent(5);
         JoinPanel joinPanel = (JoinPanel) container.getComponent(6);
+        GamePanel gamePanel = (GamePanel) container.getComponent(7);
 
         // Go to Login menu
         if (command.equals("Login")) {
@@ -98,7 +101,8 @@ public class Controller implements ActionListener {
 
             if (serverIP != null && !serverIP.trim().isEmpty()) {
                 try {
-                    client = new edu.uca.swe.Game.Connection.Client(serverIP.trim(), 5555, username);
+                    client = new edu.uca.swe.Game.Connection.Client(serverIP.trim(), 5555, username, container,
+                            cardLayout);
                     client.setHostPanel(hostPanel);
                     client.setJoinPanel(joinPanel);
                     client.openConnection();
@@ -124,7 +128,8 @@ public class Controller implements ActionListener {
 
             if (serverIP != null && !serverIP.trim().isEmpty()) {
                 try {
-                    client = new edu.uca.swe.Game.Connection.Client(serverIP.trim(), 5555, username);
+                    client = new edu.uca.swe.Game.Connection.Client(serverIP.trim(), 5555, username, container,
+                            cardLayout);
                     client.setHostPanel(hostPanel);
                     client.setJoinPanel(joinPanel);
                     client.openConnection();
@@ -155,10 +160,34 @@ public class Controller implements ActionListener {
         }
         else if (command.equals("Start")) {
             System.out.println("Starting game!");
-            GamePanel gamePanel = new GamePanel(this, playerRole);
+            client.setGamePanel(gamePanel);
+            if (client != null) {
+                try {
+                    client.sendToServer("start");
+                } catch (IOException ex) {
+                    throw new RuntimeException(ex);
+                }
+            }
+            gamePanel = new GamePanel(this, playerRole);
             container.add(gamePanel, "game");
+
+            // Set up tile button actions
+            for (int row = 0; row < 8; row++) {
+                for (int col = 0; col < 8; col++) {
+                    JButton tileButton = gamePanel.getTileButton(row, col);
+                    int finalRow = row;
+                    int finalCol = col;
+                    tileButton.addActionListener(event -> handleTileClick(finalRow, finalCol));
+                }
+            }
+
             cardLayout.show(container, "game");
         }
+    }
+
+    // Handle tile click event in the game
+    private void handleTileClick(int row, int col) {
+        System.out.println("Tile clicked at (" + row + ", " + col + ")");
     }
 
     private boolean validateLogin(String username, String password) {
@@ -209,5 +238,4 @@ public class Controller implements ActionListener {
     public String getPlayerRole() {
         return playerRole;
     }
-
 }
