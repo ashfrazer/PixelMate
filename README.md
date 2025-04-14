@@ -23,7 +23,8 @@
 ## Instructions to Run (current state)
 
 **Make sure to have [Docker](https://www.docker.com/get-started/) installed. Docker will containerize the MariaDB database.**
-
+- To start the container (which contains the database), run `docker-compose up --build`.
+- If you ever need to stop the container, run `docker-compose down`.
 - Open **three** Command Prompt windows, navigate to the project directory, and run the following command in all 3:
 `mvnw clean install`
 
