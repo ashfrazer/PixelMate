@@ -4,6 +4,8 @@ import edu.uca.swe.GUI.Colors.Constants;
 import edu.uca.swe.GUI.Controllers.Controller;
 import edu.uca.swe.Game.Board;
 import edu.uca.swe.Game.Pieces.Piece;
+import edu.uca.swe.Game.Player.Player;
+import edu.uca.swe.Game.TurnManager.TurnManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,15 +22,21 @@ public class GamePanel extends JPanel {
     private Color CREAM;
     private Font font;
     private String playerRole;
+    private TurnManager turnManager;
+    private Controller controller;
 
-    public GamePanel(Controller controller, String playerRole) {
+
+    public GamePanel(Controller controller, String playerRole, TurnManager turnManager) {
+        this.playerRole = playerRole;
+        this.turnManager = turnManager;
+        this.controller = controller;
+
         // Load constants
         BROWN = Constants.BROWN;
         DARK_GREEN = Constants.DARK_GREEN;
         LIGHT_GREEN = Constants.LIGHT_GREEN;
         CREAM = Constants.CREAM;
         font = Constants.FONT;
-        this.playerRole = playerRole;
 
         setLayout(new BorderLayout());
         board = new Board();
@@ -167,6 +175,11 @@ public class GamePanel extends JPanel {
         boardPanel.repaint();
     }
 
+    private void showPawnPromotionPopup(String color) {
+        // Create and show pawn promotion popup (pass the color of the player)
+        PawnPromotionPopup popup = new PawnPromotionPopup(color, controller);
+        popup.setVisible(true);
+    }
 
 
 }

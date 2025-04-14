@@ -1,5 +1,6 @@
 package edu.uca.swe.Game.TurnManager;
 
+import edu.uca.swe.GUI.Panels.GamePanel;
 import edu.uca.swe.Game.Board;
 import edu.uca.swe.Game.Pieces.Pawn;
 import edu.uca.swe.Game.Pieces.Piece;
@@ -16,6 +17,7 @@ public class TurnManager {
     private final Player player2;
     private Timer turnTimer;
     private boolean isGameActive;
+    private GamePanel gamePanel;
     private Board board;
     private static final int TURN_TIME_LIMIT = 45000; // 45 seconds per turn
 
@@ -26,18 +28,12 @@ public class TurnManager {
         this.isGameActive = true; // Game starts right away
         this.currentPlayer = player1; // Game starts with player 1
         turnTimer(); // Starts turn timer
+        this.gamePanel = gamePanel;
     }
 
     // Returns current player
     public Player getCurrentPlayer() {
         return currentPlayer;
-    }
-    public Player getPlayer1() {
-        return player1;
-    }
-
-    public Player getPlayer2() {
-        return player2;
     }
 
     // Changing current player
@@ -60,6 +56,9 @@ public class TurnManager {
         //TODO: wait until rules class is made
         //make sure peices rules are valid for move, if move is valid
         //update pieces position, switch turn after move
+
+        // Switch turns
+        switchTurn();
     }
 
 
