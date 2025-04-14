@@ -47,6 +47,7 @@ public class Server extends AbstractServer {
             }
         }
 
+        // Connection -- share usernames
         if (players.containsKey("host") && players.containsKey("client")) {
             System.out.println("Host and Client are now connected!");
             sendToAllClients("H_USERNAME: " + getHostUsername());

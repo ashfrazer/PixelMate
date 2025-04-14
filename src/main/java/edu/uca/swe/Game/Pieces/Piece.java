@@ -17,7 +17,7 @@ public abstract class Piece {
     //other classes will call isValidMove() when trying to move a piece
     //isValidMove() will do nothing if move is not valid
     //if move is valid then isValidMove() will call setPosition() to change piece position
-    public abstract void isValidMove(int toRow, int toCol);
+    public abstract boolean isValidMove(int fromRow, int fromCol);
 
     //Getters and setters
     public void setColor(String color){this.color = color;}

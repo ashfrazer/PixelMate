@@ -3,6 +3,7 @@ package edu.uca.swe.GUI;
 import edu.uca.swe.GUI.Colors.Constants;
 import edu.uca.swe.GUI.Controllers.Controller;
 import edu.uca.swe.GUI.Panels.*;
+import edu.uca.swe.Game.Board;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,6 +38,9 @@ public class MainGUI extends JFrame {
         // Controller
         Controller controller = new Controller(container);
 
+        // Board
+        Board board = new Board();
+
         // Get player role
         String playerRole = controller.getPlayerRole();
 
@@ -48,7 +52,7 @@ public class MainGUI extends JFrame {
         container.add(new PlayMenuPanel(controller), "playmenu");
         container.add(new HostPanel(controller), "host");
         container.add(new JoinPanel(controller), "join");
-        container.add(new GamePanel(controller, playerRole), "game");
+        container.add(new GamePanel(controller, board, playerRole), "game");
 
         // Display Main Menu
         container.setPreferredSize(new Dimension(600, 600));

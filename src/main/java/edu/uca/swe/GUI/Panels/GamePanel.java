@@ -22,15 +22,19 @@ public class GamePanel extends JPanel {
     private String playerRole;
     private JPanel boardPanel;
 
-    public GamePanel(Controller controller, String playerRole) {
+    public GamePanel(Controller controller, Board board, String playerRole) {
         // Initialize constants and board
         BROWN = Constants.BROWN;
         DARK_GREEN = Constants.DARK_GREEN;
         LIGHT_GREEN = Constants.LIGHT_GREEN;
         CREAM = Constants.CREAM;
         font = Constants.FONT;
+
+        // Set board and player role (client/host)
+        this.board = board;
         this.playerRole = playerRole;
 
+        // Set layout and arrange board
         setLayout(new BorderLayout());
         board = new Board();
         tileButtons = new JButton[8][8];
@@ -38,8 +42,10 @@ public class GamePanel extends JPanel {
         boardPanel = new JPanel(new GridLayout(8, 8));
         boardPanel.setPreferredSize(new Dimension(600, 610));
 
+        // Initialize pieces
         Piece[][] pieces = board.getBoard();
 
+        // Initialize tiles
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 JButton tile = new JButton();
@@ -81,6 +87,7 @@ public class GamePanel extends JPanel {
     }
 
     public void updateBoard() {
+        // Update board
         Piece[][] pieces = board.getBoard();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -103,8 +110,8 @@ public class GamePanel extends JPanel {
                 }
             }
         }
-        revalidate();
-        repaint();
+        this.revalidate();
+        this.repaint();
     }
 
     public JButton[][] getTileButtons() {

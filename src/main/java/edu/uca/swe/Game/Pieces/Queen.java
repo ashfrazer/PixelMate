@@ -9,7 +9,7 @@ public class Queen extends Piece {
     }
 
     //Checks to make sure move is valid and if so sets the pieces' new position and passes turn
-    public void isValidMove(int toRow, int toCol) {
+    public boolean isValidMove(int toRow, int toCol) {
         int currentRow = getRow();
         int currentCol = getCol();
 
@@ -25,5 +25,7 @@ public class Queen extends Piece {
             //todo: add logic to take a piece if positions overlap
             //todo: pass the turn to next player
         }
+        return false;
     }
+
 }

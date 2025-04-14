@@ -1,6 +1,7 @@
 package edu.uca.swe.GUI.Controllers;
 
 import edu.uca.swe.GUI.Panels.*;
+import edu.uca.swe.Game.Board;
 import edu.uca.swe.Game.Database.Database;
 
 import javax.swing.*;
@@ -74,8 +75,8 @@ public class Controller implements ActionListener {
                 loginPanel.setError("Login failed. Please try again.");
                 System.out.println("Login failed.");
             }
-        }
-        else if (command.equals("Register")) {
+        // Register new account
+        } else if (command.equals("Register")) {
             System.out.println("Registering...");
             CreateAccountPanel createAccountPanel = (CreateAccountPanel) container.getComponent(2);
             String username = createAccountPanel.getUsername();
@@ -91,11 +92,12 @@ public class Controller implements ActionListener {
             } else {
                 System.out.println("Password creation failed.");
             }
-        }
-        else if (command.equals("Host")) {
+        // Host a game
+        } else if (command.equals("Host")) {
             System.out.println("Now hosting...");
             playerRole = "host";
 
+            // Prompt user to enter IP address to host game on (ipconfig LOCAL IP address)
             String serverIP = JOptionPane.showInputDialog(container, "Enter the server IP address:",
                     "Host Game", JOptionPane.QUESTION_MESSAGE);
 
@@ -117,12 +119,12 @@ public class Controller implements ActionListener {
             } else {
                 System.out.println("Host cancelled or invalid IP.");
             }
-        }
-
-        else if (command.equals("Join")) {
+        // Join a game
+        } else if (command.equals("Join")) {
             System.out.println("Now joining...");
             playerRole = "client";
 
+            // Prompt user to enter local IP to join game on
             String serverIP = JOptionPane.showInputDialog(container, "Enter the server IP address:",
                     "Join Game", JOptionPane.QUESTION_MESSAGE);
 
@@ -147,18 +149,17 @@ public class Controller implements ActionListener {
             } else {
                 System.out.println("Join cancelled or invalid IP.");
             }
-        }
-
-        else if (command.equals("Logout")) {
+        // Log out of account
+        } else if (command.equals("Logout")) {
             System.out.println("Logging out!");
             loginSuccessful = false;
             cardLayout.show(container, "mainmenu");
-        }
-        else if (command.equals("Return")) {
+        // Go back to menu
+        } else if (command.equals("Return")) {
             System.out.println("Going back to menu.");
             cardLayout.show(container, "playmenu");
-        }
-        else if (command.equals("Start")) {
+        // Start the game
+        } else if (command.equals("Start")) {
             System.out.println("Starting game!");
             client.setGamePanel(gamePanel);
             if (client != null) {
@@ -168,26 +169,31 @@ public class Controller implements ActionListener {
                     throw new RuntimeException(ex);
                 }
             }
-            gamePanel = new GamePanel(this, playerRole);
-            container.add(gamePanel, "game");
+            // Pass a board into a new GamePanel obj (to maintain state)
+            Board board = new Board();
+            gamePanel = new GamePanel(this, board, playerRole);
 
-            // Set up tile button actions
-            for (int row = 0; row < 8; row++) {
-                for (int col = 0; col < 8; col++) {
-                    JButton tileButton = gamePanel.getTileButton(row, col);
-                    int finalRow = row;
-                    int finalCol = col;
-                    tileButton.addActionListener(event -> handleTileClick(finalRow, finalCol));
+            // Display board
+            container.add(gamePanel, "game");
+            gamePanel.revalidate();
+            gamePanel.repaint();
+
+            //todo: fix this, because host should not be only one to move pieces. testing purposes
+            if (playerRole.equals("host")) {
+                GameController gameController = new GameController(gamePanel, board);
+
+                for (int row = 0; row < 8; row++) {
+                    for (int col = 0; col < 8; col++) {
+                        JButton tileButton = gamePanel.getTileButton(row, col);
+                        int finalRow = row;
+                        int finalCol = col;
+                        tileButton.addActionListener(event -> gameController.handleTileClick(finalRow, finalCol));
+                    }
                 }
             }
 
             cardLayout.show(container, "game");
         }
-    }
-
-    // Handle tile click event in the game
-    private void handleTileClick(int row, int col) {
-        System.out.println("Tile clicked at (" + row + ", " + col + ")");
     }
 
     private boolean validateLogin(String username, String password) {

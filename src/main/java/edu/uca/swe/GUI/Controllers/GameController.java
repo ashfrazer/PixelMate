@@ -9,14 +9,14 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class GamePanelController implements ActionListener {
+public class GameController implements ActionListener {
     private GamePanel gamePanel;
     private Board board;
     private Piece selectedPiece;
     private int selectedRow;
     private int selectedCol;
 
-    public GamePanelController(GamePanel gamePanel, Board board) {
+    public GameController(GamePanel gamePanel, Board board) {
         this.gamePanel = gamePanel;
         this.board = board;
         this.selectedPiece = null;
@@ -24,10 +24,9 @@ public class GamePanelController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        // Get clicked tile
+        // identify which tile was clicked
         JButton clickedButton = (JButton) e.getSource();
 
-        // Find pos of clicked tile
         int row = -1, col = -1;
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -39,27 +38,31 @@ public class GamePanelController implements ActionListener {
             }
         }
 
-        // Handle click
-        //TODO fix logic
-        if (selectedPiece == null) {
-            Piece piece = board.getBoard()[row][col];
-            if (piece != null) {
-                selectedPiece = piece;
-                selectedRow = row;
-                selectedCol = col;
-                System.out.println("Selected piece: " + piece.getClass().getSimpleName() + " at [" + row + "," + col + "]");
-            }
-        } else {
-            Move move = new Move(board, selectedPiece, row, col);
+        if (row == -1 || col == -1) return;
+
+        handleTileClick(row, col);
+    }
+
+    public void handleTileClick(int row, int col) {
+        // Piece user clicked on
+//        Piece clickedPiece = board.getBoard()[row][col];
+
+        if (selectedPiece != null) {
+            // Attempt a move
+            Move move = new Move(board, selectedPiece, selectedRow, selectedCol, row, col);
+            // If move is valid, make the move
             if (move.isValid()) {
                 move.makeMove();
+                gamePanel.revalidate();
+                gamePanel.repaint();
                 System.out.println("Move made to [" + row + "," + col + "]");
-                selectedPiece = null;
             } else {
                 System.out.println("Invalid move.");
             }
+            // Deselect piece
+            selectedPiece = null;
         }
-
+        // Update board
         gamePanel.updateBoard();
     }
 }
