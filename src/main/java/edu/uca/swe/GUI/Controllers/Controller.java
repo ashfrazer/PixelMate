@@ -2,6 +2,8 @@ package edu.uca.swe.GUI.Controllers;
 
 import edu.uca.swe.GUI.Panels.*;
 import edu.uca.swe.Game.Database.Database;
+import edu.uca.swe.Game.Player.Player;
+import edu.uca.swe.Game.TurnManager.TurnManager;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,6 +18,9 @@ public class Controller implements ActionListener {
     private Database database;
     private String username;
     private String playerRole;
+    private TurnManager turnManager;
+    private Player player1;
+    private Player player2;
     private edu.uca.swe.Game.Connection.Client client;
     private edu.uca.swe.Game.Connection.Server server;
 
@@ -155,7 +160,26 @@ public class Controller implements ActionListener {
         }
         else if (command.equals("Start")) {
             System.out.println("Starting game!");
-            GamePanel gamePanel = new GamePanel(this, playerRole);
+
+            // Get this player1 username
+            String player1Username = this.username;
+
+            // TODO: Get the opponent's username directly from the client or server
+            String player2Username = "opponent";
+
+            // Assigns role based on playerRole
+            if (playerRole.equals("host")) {
+                player1 = new Player(player1Username, true, "white"); // host goes first
+                player2 = new Player(player2Username, false, "black");
+            } else {
+                player1 = new Player(player2Username, false, "black"); // client goes second
+                player2 = new Player(player1Username, true, "white");
+            }
+            
+            turnManager = new TurnManager(player1, player2);
+
+            // Set up GamePanel
+            GamePanel gamePanel = new GamePanel(this, playerRole, turnManager);
             container.add(gamePanel, "game");
             cardLayout.show(container, "game");
         }
