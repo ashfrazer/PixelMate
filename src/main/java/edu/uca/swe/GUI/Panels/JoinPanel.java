@@ -17,6 +17,7 @@ public class JoinPanel extends JPanel {
     private Color CREAM;
     private Font font;
     private BufferedImage knightIcon;
+    public JLabel waitingLabel;
 
     public JoinPanel(Controller controller) {
         // Load constants
@@ -68,7 +69,7 @@ public class JoinPanel extends JPanel {
         centerPanel.setOpaque(false);
 
         JLabel playersLabel = createLabel("Players:", 26, true);
-        JLabel waitingLabel = createLabel("waiting for host...", 24, false);
+        waitingLabel = createLabel("waiting for host...", 24, false);
         JLabel hostLabel = createLabel("You (client)", 24, false);
 
         centerPanel.add(playersLabel);
@@ -114,5 +115,11 @@ public class JoinPanel extends JPanel {
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(controller);
         return button;
+    }
+
+    public void updateWaitingLabel(String msg) {
+        waitingLabel.setText(msg);
+        this.revalidate();
+        this.repaint();
     }
 }

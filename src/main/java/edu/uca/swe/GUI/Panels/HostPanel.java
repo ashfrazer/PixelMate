@@ -17,6 +17,7 @@ public class HostPanel extends JPanel {
     private Color CREAM;
     private Font font;
     private BufferedImage knightIcon;
+    public JLabel waitingLabel;
 
     public HostPanel(Controller controller) {
         // Load constants
@@ -69,7 +70,7 @@ public class HostPanel extends JPanel {
 
         JLabel playersLabel = createLabel("Players:", 26, true);
         JLabel hostLabel = createLabel("You (host)", 24, false);
-        JLabel waitingLabel = createLabel("waiting...", 24, false);
+        waitingLabel = createLabel("waiting for player...", 24, false);
 
         centerPanel.add(playersLabel);
         centerPanel.add(Box.createRigidArea(new Dimension(0, 10)));
@@ -114,5 +115,11 @@ public class HostPanel extends JPanel {
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         button.addActionListener(controller);
         return button;
+    }
+
+    public void updateWaitingLabel(String msg) {
+        waitingLabel.setText(msg);
+        this.revalidate();
+        this.repaint();
     }
 }
