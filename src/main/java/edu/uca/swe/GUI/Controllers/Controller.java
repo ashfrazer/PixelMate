@@ -1,9 +1,7 @@
 package edu.uca.swe.GUI.Controllers;
 
-import edu.uca.swe.GUI.Panels.CreateAccountPanel;
-import edu.uca.swe.GUI.Panels.LoginPanel;
+import edu.uca.swe.GUI.Panels.*;
 import edu.uca.swe.Game.Database.Database;
-import edu.uca.swe.GUI.Panels.GamePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,6 +31,8 @@ public class Controller implements ActionListener {
         String command = e.getActionCommand();
         CardLayout cardLayout = (CardLayout) container.getLayout();
         LoginPanel loginPanel = (LoginPanel) container.getComponent(1);
+        HostPanel hostPanel = (HostPanel) container.getComponent(5);
+        JoinPanel joinPanel = (JoinPanel) container.getComponent(6);
 
         // Go to Login menu
         if (command.equals("Login")) {
@@ -93,53 +93,57 @@ public class Controller implements ActionListener {
             System.out.println("Now hosting...");
             playerRole = "host";
 
-            new Thread(() -> {
-                server = new edu.uca.swe.Game.Connection.Server(5555);
+            String serverIP = JOptionPane.showInputDialog(container, "Enter the server IP address:",
+                    "Host Game", JOptionPane.QUESTION_MESSAGE);
+
+            if (serverIP != null && !serverIP.trim().isEmpty()) {
                 try {
-                    server.listen();
-                    System.out.println("Server listening...");
+                    client = new edu.uca.swe.Game.Connection.Client(serverIP.trim(), 5555, username);
+                    client.setHostPanel(hostPanel);
+                    client.setJoinPanel(joinPanel);
+                    client.openConnection();
+                    client.sendToServer("host");
+                    client.sendToServer("H_USERNAME: " + username);
+                    cardLayout.show(container, "host");
                 } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(container, "Failed to connect to server: " + ex.getMessage(),
+                            "Connection Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 }
-            }).start();
-
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+            } else {
+                System.out.println("Host cancelled or invalid IP.");
             }
-
-            client = new edu.uca.swe.Game.Connection.Client("localhost", 5555);
-            try {
-                client.openConnection();
-                client.sendToServer("host");
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            cardLayout.show(container, "host");
         }
+
         else if (command.equals("Join")) {
             System.out.println("Now joining...");
             playerRole = "client";
 
-            String hostIP = JOptionPane.showInputDialog(container, "Enter the host IP address:", "Join Game", JOptionPane.QUESTION_MESSAGE);
+            String serverIP = JOptionPane.showInputDialog(container, "Enter the server IP address:",
+                    "Join Game", JOptionPane.QUESTION_MESSAGE);
 
-            if (hostIP != null && !hostIP.trim().isEmpty()) {
+            if (serverIP != null && !serverIP.trim().isEmpty()) {
                 try {
-                    edu.uca.swe.Game.Connection.Client client = new edu.uca.swe.Game.Connection.Client(hostIP.trim(), 5555);
+                    client = new edu.uca.swe.Game.Connection.Client(serverIP.trim(), 5555, username);
+                    client.setHostPanel(hostPanel);
+                    client.setJoinPanel(joinPanel);
                     client.openConnection();
-                    System.out.println("Connected to server at " + hostIP);
+                    client.sendToServer("client");
+                    client.sendToServer("C_USERNAME: " + username);
+                    System.out.println("Connected to server at " + serverIP);
                     this.client = client;
                     cardLayout.show(container, "join");
+
                 } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(container, "Failed to connect to host: " + ex.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(container, "Failed to connect to host: " + ex.getMessage(),
+                            "Connection Error", JOptionPane.ERROR_MESSAGE);
                     ex.printStackTrace();
                 }
             } else {
                 System.out.println("Join cancelled or invalid IP.");
             }
         }
+
         else if (command.equals("Logout")) {
             System.out.println("Logging out!");
             loginSuccessful = false;
@@ -162,9 +166,10 @@ public class Controller implements ActionListener {
 
         try {
             // Database connection
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pixelmate_login", "player", "letsplaychess2025");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pixelmate_login",
+                    "player", "letsplaychess2025");
 
-            // Prepare SQL query to fetch the password for the given username
+            // SQL query to fetch password for given username
             String query = "SELECT password FROM users WHERE username = ?";
             PreparedStatement stmt = conn.prepareStatement(query);
             stmt.setString(1, username);
@@ -172,10 +177,10 @@ public class Controller implements ActionListener {
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
-                // Get the stored password
+                // Get stored password
                 String storedPassword = rs.getString("password");
 
-                // Compare the stored password with entered password
+                // Compare stored password with entered password
                 if (storedPassword.equals(password)) {
                     isValid = true;
                 }
