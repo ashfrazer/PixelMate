@@ -24,7 +24,7 @@
 
 **Make sure to have [Docker](https://www.docker.com/get-started/) installed. Docker will containerize the MariaDB database.**
 
-- Open **three** Command Prompt windows and run the following command in all 3:
+- Open **three** Command Prompt windows, navigate to the project directory, and run the following command in all 3:
 `mvnw clean install`
 
 - In Window 1, run the following command to run the back-end server:
