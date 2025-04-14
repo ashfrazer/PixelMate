@@ -129,4 +129,9 @@ public class GamePanel extends JPanel {
     public JPanel getBoardPanel() {
         return boardPanel;
     }
+    private void showPawnPromotionPopup(String color) {
+        // Create and show pawn promotion popup (pass the color of the player)
+        PawnPromotionPopup popup = new PawnPromotionPopup(color);
+        popup.setVisible(true);
+    }
 }
