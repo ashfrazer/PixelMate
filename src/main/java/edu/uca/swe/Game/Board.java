@@ -29,4 +29,8 @@ public class Board {
     public Piece[][] getBoard() {
         return board;
     }
+    public void setPieceAt(int row, int col, Piece piece) {
+        board[row][col] = piece;
+    }
+
 }

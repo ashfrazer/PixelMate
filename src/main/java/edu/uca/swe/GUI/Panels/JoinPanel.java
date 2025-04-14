@@ -86,9 +86,11 @@ public class JoinPanel extends JPanel {
         buttonPanel.setOpaque(false);
 
         JButton returnButton = createMenuButton("Return", controller);
+        JButton startButton = createMenuButton("Start", controller);
 
         buttonPanel.add(returnButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        buttonPanel.add(startButton);
         mainPanel.add(buttonPanel, BorderLayout.SOUTH);
     }
 
