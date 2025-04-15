@@ -1,5 +1,5 @@
 package edu.uca.swe.Game.Pieces;
-
+import edu.uca.swe.Game.Board;
 
 public abstract class Piece {
     //Fields
@@ -17,7 +17,7 @@ public abstract class Piece {
     //other classes will call isValidMove() when trying to move a piece
     //isValidMove() will do nothing if move is not valid
     //if move is valid then isValidMove() will call setPosition() to change piece position
-    public abstract boolean isValidMove(int fromRow, int fromCol);
+    public abstract boolean isValidMove(int fromRow, int fromCol, Board board);
 
     //Getters and setters
     public void setColor(String color){this.color = color;}
