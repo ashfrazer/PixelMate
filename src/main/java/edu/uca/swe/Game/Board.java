@@ -73,7 +73,7 @@ public class Board {
             {
                 Piece piece = board[i][j];
                 if (piece != null && piece.getColor().equals(opponentColor))  {
-                    if (piece.isValidMove(row, col, this)){
+                    if (piece.isValidMove(row, col)){
                         return true;
                     }
                 }
