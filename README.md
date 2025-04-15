@@ -23,7 +23,12 @@
 ## Instructions to Run (current state)
 
 **Make sure to have [Docker](https://www.docker.com/get-started/) installed. Docker will containerize the MariaDB database.**
-- Open **three** Command Prompt windows, navigate to the project directory, and run the following command in one of them: `mvnw clean install`.
+- Open **three** Command Prompt windows and navigate to the project directory.
+- In any of the windows, run the following commands:
+  
+   ```mvn install:install-file -Dfile=ocsf.jar -DgroupId=ocsf -DartifactId=ocsf -Dversion=1.0 -Dpackaging=jar```
+  
+   ```mvnw clean install```
 - To build the container (which contains the database), run `docker-compose up -d --build`.
 
   >> **NOTE: If you ever need to stop the container**, run `docker-compose down`.
