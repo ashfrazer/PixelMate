@@ -27,11 +27,9 @@
             <version>8.0.28</version>
         </dependency>
         <dependency>
-            <groupId>com.sample</groupId>
-            <artifactId>sample</artifactId>
+            <groupId>ocsf</groupId>
+            <artifactId>ocsf</artifactId>
             <version>1.0</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/ocsf.jar</systemPath>
         </dependency>
 
     </dependencies>
@@ -51,6 +49,8 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
+
     </build>
 </project>
