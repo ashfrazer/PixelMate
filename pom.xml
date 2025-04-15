@@ -27,9 +27,11 @@
             <version>8.0.28</version>
         </dependency>
         <dependency>
-            <groupId>ocsf</groupId>
-            <artifactId>ocsf</artifactId>
+            <groupId>com.sample</groupId>
+            <artifactId>sample</artifactId>
             <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/ocsf.jar</systemPath>
         </dependency>
 
     </dependencies>
