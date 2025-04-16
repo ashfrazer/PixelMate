@@ -1,5 +1,7 @@
 package edu.uca.swe.Game.Pieces;
 
+import edu.uca.swe.Game.Board;
+
 import static java.lang.Math.abs;
 
 public class Knight extends Piece{
@@ -10,7 +12,7 @@ public class Knight extends Piece{
     }
 
     //Checks to make sure move is valid and if so sets the pieces' new position and passes turn
-    public boolean isValidMove(int toRow, int toCol) {
+    public boolean isValidMove(int toRow, int toCol, Board board) {
         int fromRow = getRow();
         int fromCol = getCol();
         Piece targetPiece = board.getPieceAt(toRow, toCol);

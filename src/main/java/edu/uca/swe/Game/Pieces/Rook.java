@@ -1,5 +1,7 @@
 package edu.uca.swe.Game.Pieces;
 
+import edu.uca.swe.Game.Board;
+
 public class Rook extends Piece {
 
     //Constructor
@@ -8,7 +10,7 @@ public class Rook extends Piece {
     }
 
     //Checks to make sure move is valid and if so sets the pieces' new position and passes turn
-    public boolean isValidMove(int toRow, int toCol) {
+    public boolean isValidMove(int toRow, int toCol, Board board) {
         int currentRow = getRow();
         int currentCol = getCol();
 

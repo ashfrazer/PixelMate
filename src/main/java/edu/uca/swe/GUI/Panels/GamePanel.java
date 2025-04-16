@@ -2,6 +2,7 @@ package edu.uca.swe.GUI.Panels;
 
 import edu.uca.swe.GUI.Colors.Constants;
 import edu.uca.swe.GUI.Controllers.Controller;
+import edu.uca.swe.GUI.Controllers.GameController;
 import edu.uca.swe.Game.Board;
 import edu.uca.swe.Game.Pieces.Piece;
 
@@ -21,8 +22,9 @@ public class GamePanel extends JPanel {
     private Font font;
     private String playerRole;
     private JPanel boardPanel;
+    private GameController gameController;
 
-    public GamePanel(Controller controller, Board board, String playerRole) {
+    public GamePanel(Board board, String playerRole) {
         // Initialize constants and board
         BROWN = Constants.BROWN;
         DARK_GREEN = Constants.DARK_GREEN;
@@ -33,10 +35,11 @@ public class GamePanel extends JPanel {
         // Set board and player role (client/host)
         this.board = board;
         this.playerRole = playerRole;
+        gameController = new GameController(this, board);
 
         // Set layout and arrange board
         setLayout(new BorderLayout());
-        board = new Board();
+        //board = new Board();
         tileButtons = new JButton[8][8];
 
         boardPanel = new JPanel(new GridLayout(8, 8));
@@ -75,7 +78,7 @@ public class GamePanel extends JPanel {
 
                 // Add button to panel
                 tileButtons[row][col] = tile;
-                tile.addActionListener(controller);
+                tile.addActionListener(gameController);
                 boardPanel.add(tile);
             }
         }

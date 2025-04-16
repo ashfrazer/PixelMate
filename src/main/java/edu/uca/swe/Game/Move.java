@@ -31,7 +31,7 @@ public class Move {
         if (destinationPiece != null && destinationPiece.getColor().equals(piece.getColor())) return false;
 
         // return whether valid or not
-        return piece.isValidMove(toRow, toCol);
+        return piece.isValidMove(toRow, toCol, board);
     }
 
 

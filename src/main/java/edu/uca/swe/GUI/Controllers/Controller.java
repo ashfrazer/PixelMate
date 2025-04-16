@@ -161,6 +161,10 @@ public class Controller implements ActionListener {
         // Start the game
         } else if (command.equals("Start")) {
             System.out.println("Starting game!");
+            // Pass a board into a new GamePanel obj (to maintain state)
+            Board board = new Board();
+            gamePanel = new GamePanel(board, playerRole);
+
             client.setGamePanel(gamePanel);
             if (client != null) {
                 try {
@@ -169,9 +173,6 @@ public class Controller implements ActionListener {
                     throw new RuntimeException(ex);
                 }
             }
-            // Pass a board into a new GamePanel obj (to maintain state)
-            Board board = new Board();
-            gamePanel = new GamePanel(this, board, playerRole);
 
             // Display board
             container.add(gamePanel, "game");
@@ -179,18 +180,18 @@ public class Controller implements ActionListener {
             gamePanel.repaint();
 
             //todo: fix this, because host should not be only one to move pieces. testing purposes
-            if (playerRole.equals("host")) {
-                GameController gameController = new GameController(gamePanel, board);
+            //if (playerRole.equals("host")) {
+               // GameController gameController = new GameController(gamePanel, board);
 
-                for (int row = 0; row < 8; row++) {
-                    for (int col = 0; col < 8; col++) {
-                        JButton tileButton = gamePanel.getTileButton(row, col);
-                        int finalRow = row;
-                        int finalCol = col;
-                        tileButton.addActionListener(event -> gameController.handleTileClick(finalRow, finalCol));
-                    }
-                }
-            }
+                //for (int row = 0; row < 8; row++) {
+                  //  for (int col = 0; col < 8; col++) {
+                    //    JButton tileButton = gamePanel.getTileButton(row, col);
+                      //  int finalRow = row;
+                        //int finalCol = col;
+                        //tileButton.addActionListener(event -> gameController.handleTileClick(finalRow, finalCol));
+                    //}
+                //}
+            //}
 
             cardLayout.show(container, "game");
         }

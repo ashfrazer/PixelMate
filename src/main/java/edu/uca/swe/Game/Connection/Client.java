@@ -58,7 +58,7 @@ public class Client extends AbstractClient {
         } else if (message.equals("start")) {
             SwingUtilities.invokeLater(() -> {
                 if (gamePanel == null) {
-                    gamePanel = new GamePanel(controller, board, "client");
+                    gamePanel = new GamePanel(board, "client");
                     container.add(gamePanel, "game");
                 }
                 cardLayout.show(container, "game");

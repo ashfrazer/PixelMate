@@ -3,7 +3,7 @@ package edu.uca.swe.Game;
 import edu.uca.swe.Game.Pieces.*;
 
 public class Board {
-    private final Piece[][] board;
+    private Piece[][] board;
 
     // Constructor initializes the board and pieces
     public Board() {
@@ -34,6 +34,7 @@ public class Board {
     }
     public Piece getPieceAt(int row, int col){
         if (isWithinBounds(row, col)){
+            System.out.println("something might be fucked with this if it fails right after");
             return board[row][col];
         }
         return null;
@@ -73,7 +74,7 @@ public class Board {
             {
                 Piece piece = board[i][j];
                 if (piece != null && piece.getColor().equals(opponentColor))  {
-                    if (piece.isValidMove(row, col)){
+                    if (piece.isValidMove(row, col,this)){
                         return true;
                     }
                 }
