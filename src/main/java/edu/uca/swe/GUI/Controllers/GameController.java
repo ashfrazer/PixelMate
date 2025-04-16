@@ -44,8 +44,6 @@ public class GameController implements ActionListener {
         if(selectedPiece == null) {
             while(selectedPiece == null) {
                 selectedPiece = board.getPieceAt(row, col);
-                System.out.print("AP: ");
-                System.out.println(selectedPiece);
             }
 
         }else {
@@ -66,7 +64,7 @@ public class GameController implements ActionListener {
                 move.makeMove();
                 gamePanel.revalidate();
                 gamePanel.repaint();
-                System.out.println("Move made to [" + row + "," + col + "]");
+                System.out.println(selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
             } else {
                 System.out.println("Invalid move.");
             }

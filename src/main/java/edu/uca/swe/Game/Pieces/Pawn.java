@@ -11,6 +11,8 @@ public class Pawn extends Piece {
     }
 
 
+    public String toString(){return "p";}
+
     @Override
     public boolean isValidMove(int toRow, int toCol, Board board) {
         int fromRow = getRow();
@@ -28,7 +30,7 @@ public class Pawn extends Piece {
             }
 
             // Moving two forward (only allowed when starting from row 2)
-            else if (toCol == fromCol && toRow == 4 && fromRow == 2) {
+            else if (toCol == fromCol && toRow == 3 && fromRow == 1) {
                 // Check to see if there is a piece obstructing, otherwise return true
                 if (targetPiece == null) return true;
                 else return false;
@@ -38,8 +40,10 @@ public class Pawn extends Piece {
             else if (abs(toCol - fromCol) == 1 && toRow == fromRow + 1) {
                 // Check to see if the target piece is an enemy piece,
                 // Also ensure that the piece would not be moving out of bounds
-                if (targetPiece.getColor().equalsIgnoreCase("Black") && board.isWithinBounds(toRow, toCol))
-                    return true;
+                if (targetPiece != null){
+                    if (targetPiece.getColor().equalsIgnoreCase("Black") && board.isWithinBounds(toRow, toCol))
+                        return true;
+                }
                 else return false;
             }
 
@@ -49,8 +53,25 @@ public class Pawn extends Piece {
 
         if (getColor().equalsIgnoreCase("Black")) {
             // black starts at row 6, moves up (-1)
-            if (fromCol == toCol && fromRow - 1 == toRow) return true;
-            if (fromCol == toCol && fromRow == 6 && toRow == 4) return true;
+            if (toCol == fromCol && toRow == fromRow - 1) {
+                // Check to see if there is a piece obstructing, otherwise return true
+                if (targetPiece == null) return true;
+                else return false;
+            }
+            else if (toCol == fromCol && toRow == 4 && fromRow == 6) {
+                // Check to see if there is a piece obstructing, otherwise return true
+                if (targetPiece == null) return true;
+                else return false;
+            }
+            else if (abs(toCol - fromCol) == 1 && toRow == fromRow - 1) {
+                // Check to see if the target piece is an enemy piece,
+                // Also ensure that the piece would not be moving out of bounds
+                if (targetPiece != null){
+                    if (targetPiece.getColor().equalsIgnoreCase("White") && board.isWithinBounds(toRow, toCol))
+                        return true;
+                }
+                else return false;
+            }
         }
 
         return false;

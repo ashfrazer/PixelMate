@@ -34,7 +34,6 @@ public class Board {
     }
     public Piece getPieceAt(int row, int col){
         if (isWithinBounds(row, col)){
-            System.out.println("something might be fucked with this if it fails right after");
             return board[row][col];
         }
         return null;
