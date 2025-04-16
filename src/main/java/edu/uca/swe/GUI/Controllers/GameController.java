@@ -15,11 +15,17 @@ public class GameController implements ActionListener {
     private Piece selectedPiece;
     private int selectedRow;
     private int selectedCol;
+    private String Color;
 
     public GameController(GamePanel gamePanel, Board board) {
         this.gamePanel = gamePanel;
         this.board = board;
         this.selectedPiece = null;
+
+        //set Host to White and Client to Black
+        if (gamePanel.getPlayerRole() == "host"){
+            Color = "White";
+        }else{ Color = "Black";}
     }
 
     @Override
@@ -42,35 +48,33 @@ public class GameController implements ActionListener {
         //First click will select the game piece
         //second click will execute move and deselect piece
         if(selectedPiece == null) {
-            while(selectedPiece == null) {
-                selectedPiece = board.getPieceAt(row, col);
+            if(board.getPieceAt(row, col) != null) {
+                if(board.getPieceAt(row, col).getColor().equals(Color)) {
+                    selectedPiece = board.getPieceAt(row, col);
+                }
             }
-
         }else {
             handleTileClick(row, col);
         }
     }
 
     public void handleTileClick(int row, int col) {
-        if(selectedPiece == null) {
-            selectedPiece = board.getPieceAt(row, col);
-        }else{
-            // Attempt a move
-            selectedRow = selectedPiece.getRow();
-            selectedCol = selectedPiece.getCol();
-            Move move = new Move(board, selectedPiece, selectedRow, selectedCol, row, col);
-            // If move is valid, make the move
-            if (move.isValid()) {
-                move.makeMove();
-                gamePanel.revalidate();
-                gamePanel.repaint();
-                System.out.println(selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
-            } else {
-                System.out.println("Invalid move.");
-            }
-            // Deselect piece
-            selectedPiece = null;
+        // Attempt a move
+        selectedRow = selectedPiece.getRow();
+        selectedCol = selectedPiece.getCol();
+        Move move = new Move(board, selectedPiece, selectedRow, selectedCol, row, col);
+        // If move is valid, make the move
+        if (move.isValid()) {
+            move.makeMove();
+            gamePanel.revalidate();
+            gamePanel.repaint();
+            System.out.println(selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
+        } else {
+            System.out.println("Invalid move.");
         }
+        // Deselect piece
+        selectedPiece = null;
+
         // Update board
         gamePanel.updateBoard();
     }
