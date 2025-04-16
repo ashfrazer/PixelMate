@@ -44,31 +44,35 @@ public class Server extends AbstractServer {
                 setHostUsername(message.substring("H_USERNAME: ".length()).trim());
             } else if (message.startsWith("C_USERNAME: ")) {
                 setClientUsername(message.substring("C_USERNAME: ".length()).trim());
+            } else{
+                sendToAllClients(msg);
             }
         }
+
+
 
         // Connection -- share usernames
-        if (players.containsKey("host") && players.containsKey("client")) {
-            System.out.println("Host and Client are now connected!");
-            sendToAllClients("H_USERNAME: " + getHostUsername());
-            sendToAllClients("C_USERNAME: " + getClientUsername());
-            try {
-                ConnectionToClient hostConn = players.get("host");
-                ConnectionToClient clientConn = players.get("client");
+        //if (players.containsKey("host") && players.containsKey("client")) {
+          //  System.out.println("Host and Client are now connected!");
+            //sendToAllClients("H_USERNAME: " + getHostUsername());
+        //    sendToAllClients("C_USERNAME: " + getClientUsername());
+          //  try {
+            //    ConnectionToClient hostConn = players.get("host");
+              //  ConnectionToClient clientConn = players.get("client");
 
-                hostConn.sendToClient("Both players connected. Game can start!");
-                clientConn.sendToClient("Both players connected. Game can start!");
+                //hostConn.sendToClient("Both players connected. Game can start!");
+             //   clientConn.sendToClient("Both players connected. Game can start!");
 
-                String host = (hostUsername != null) ? hostUsername : "Unknown";
-                String clientName = (clientUsername != null) ? clientUsername : "Unknown";
-                String userMessage = "USERNAMES:" + host + "," + clientName;
+            //    String host = (hostUsername != null) ? hostUsername : "Unknown";
+              //  String clientName = (clientUsername != null) ? clientUsername : "Unknown";
+                //String userMessage = "USERNAMES:" + host + "," + clientName;
 
-                hostConn.sendToClient(userMessage);
-                clientConn.sendToClient(userMessage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+        //        hostConn.sendToClient(userMessage);
+          //      clientConn.sendToClient(userMessage);
+            //} catch (IOException e) {
+              //  e.printStackTrace();
+            //}
+        //}
 
         this.sendToAllClients(msg);
     }

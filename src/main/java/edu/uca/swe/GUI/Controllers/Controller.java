@@ -2,6 +2,7 @@ package edu.uca.swe.GUI.Controllers;
 
 import edu.uca.swe.GUI.Panels.*;
 import edu.uca.swe.Game.Board;
+import edu.uca.swe.Game.Connection.Client;
 import edu.uca.swe.Game.Database.Database;
 
 import javax.swing.*;
@@ -163,7 +164,7 @@ public class Controller implements ActionListener {
             System.out.println("Starting game!");
             // Pass a board into a new GamePanel obj (to maintain state)
             Board board = new Board();
-            gamePanel = new GamePanel(board, playerRole);
+            gamePanel = new GamePanel(board, playerRole, client);
 
             client.setGamePanel(gamePanel);
             if (client != null) {
@@ -178,20 +179,6 @@ public class Controller implements ActionListener {
             container.add(gamePanel, "game");
             gamePanel.revalidate();
             gamePanel.repaint();
-
-            //todo: fix this, because host should not be only one to move pieces. testing purposes
-            //if (playerRole.equals("host")) {
-               // GameController gameController = new GameController(gamePanel, board);
-
-                //for (int row = 0; row < 8; row++) {
-                  //  for (int col = 0; col < 8; col++) {
-                    //    JButton tileButton = gamePanel.getTileButton(row, col);
-                      //  int finalRow = row;
-                        //int finalCol = col;
-                        //tileButton.addActionListener(event -> gameController.handleTileClick(finalRow, finalCol));
-                    //}
-                //}
-            //}
 
             cardLayout.show(container, "game");
         }
@@ -245,4 +232,6 @@ public class Controller implements ActionListener {
     public String getPlayerRole() {
         return playerRole;
     }
+
+    public Client getClient(){return client;}
 }

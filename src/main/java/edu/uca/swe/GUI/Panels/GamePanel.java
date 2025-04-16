@@ -4,6 +4,7 @@ import edu.uca.swe.GUI.Colors.Constants;
 import edu.uca.swe.GUI.Controllers.Controller;
 import edu.uca.swe.GUI.Controllers.GameController;
 import edu.uca.swe.Game.Board;
+import edu.uca.swe.Game.Connection.Client;
 import edu.uca.swe.Game.Pieces.Piece;
 
 import javax.swing.*;
@@ -23,8 +24,9 @@ public class GamePanel extends JPanel {
     private String playerRole;
     private JPanel boardPanel;
     private GameController gameController;
+    private Client client;
 
-    public GamePanel(Board board, String playerRole) {
+    public GamePanel(Board board, String playerRole, Client client) {
         // Initialize constants and board
         BROWN = Constants.BROWN;
         DARK_GREEN = Constants.DARK_GREEN;
@@ -35,6 +37,7 @@ public class GamePanel extends JPanel {
         // Set board and player role (client/host)
         this.board = board;
         this.playerRole = playerRole;
+        this.client = client;
         gameController = new GameController(this, board);
 
         // Set layout and arrange board
@@ -134,4 +137,6 @@ public class GamePanel extends JPanel {
     }
 
     public String getPlayerRole(){return playerRole;}
+
+    public Client getClient(){return client;}
 }

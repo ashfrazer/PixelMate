@@ -8,6 +8,7 @@ import edu.uca.swe.GUI.Panels.GamePanel;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 public class GameController implements ActionListener {
     private GamePanel gamePanel;
@@ -54,11 +55,15 @@ public class GameController implements ActionListener {
                 }
             }
         }else {
-            handleTileClick(row, col);
+            try {
+                handleTileClick(row, col);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         }
     }
 
-    public void handleTileClick(int row, int col) {
+    public void handleTileClick(int row, int col) throws IOException {
         // Attempt a move
         selectedRow = selectedPiece.getRow();
         selectedCol = selectedPiece.getCol();
@@ -68,7 +73,8 @@ public class GameController implements ActionListener {
             move.makeMove();
             gamePanel.revalidate();
             gamePanel.repaint();
-            System.out.println(selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
+            gamePanel.getClient().sendToServer
+                    (gamePanel.getPlayerRole() + " moved " + selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
         } else {
             System.out.println("Invalid move.");
         }
