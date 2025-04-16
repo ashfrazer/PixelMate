@@ -22,21 +22,25 @@ public class Knight extends Piece{
         if (abs(fromCol - toCol) == 2 && abs(fromRow - toRow) == 1) {
             // Check to see if desired position is occupied by a piece of same color as one being moved
             // or if the desired position is out of bounds
-            if (targetPiece.getColor().equals(this.getColor()) || !board.isWithinBounds(toRow, toCol))
-                return false;
+            if(targetPiece != null){
+                if (targetPiece.getColor().equals(this.getColor()) || !board.isWithinBounds(toRow, toCol))
+                    return false;
+            }
 
             else return true;
-
-            //I think all of these todos could come from the Rules() class
-            //todo: add check to make sure King is not in Check or if in check move will block check
-            //todo: add logic to make sure move wont put our king in Check
-            //setPosition(toRow, toCol);
-
-            //todo: add logic to take a piece if positions overlap
-            //todo: pass the turn to next player (shouldn't this go in Move class in/at end of the
-            //      makeMove() method? -carson
         }
 
-        else {return false;}
+        if (abs(fromCol - toCol) == 1 && abs(fromRow - toRow) == 2) {
+            // Check to see if desired position is occupied by a piece of same color as one being moved
+            // or if the desired position is out of bounds
+            if(targetPiece != null){
+                if (targetPiece.getColor().equals(this.getColor()) || !board.isWithinBounds(toRow, toCol))
+                    return false;
+            }
+
+            else return true;
+        }
+
+        return false;
     }
 }

@@ -33,8 +33,7 @@ public class Move {
         // return whether valid or not
         return piece.isValidMove(toRow, toCol, board);
     }
-
-
+    
     public void makeMove() {
         // Store piece into new spot if valid move
         if (isValid()) {
@@ -46,5 +45,4 @@ public class Move {
             System.out.println("Invalid move.");
         }
     }
-
 }
