@@ -82,6 +82,13 @@ public class Board {
         return false;
     }
 
+    //This method will return true if the move will puts the king in check; false if it doesn't.
+    //We DON'T want that to be able to happen, so this will play a big role in isValidMove()
+    public boolean doesPutKingInCheck()
+    {
+        return true;
+    }
+
     private String currentTurn = "White";
 
     public String getCurrentTurn()

@@ -13,12 +13,36 @@ public class Pawn extends Piece {
     public boolean isValidMove(int toRow, int toCol) {
         int fromRow = getRow();
         int fromCol = getCol();
+        Piece targetPiece = board.getPieceAt(toRow, toCol);
 
-        //todo: add first move (up 2 squares) logic and capture logic
+        //todo: add capture logic
         if (getColor().equalsIgnoreCase("White")) {
-            // white starts at row 1, moves down (+1)
-            if (fromCol == toCol && fromRow + 1 == toRow) return true;
-            if (fromCol == toCol && fromRow == 1 && toRow == 3) return true;
+            // White pawn always starts at row 2
+            // Moving one forward
+            if (toCol == fromCol && toRow == fromRow + 1) {
+                // Check to see if there is a piece obstructing, otherwise return true
+                if (targetPiece == null) return true;
+                else return false;
+            }
+
+            // Moving two forward (only allowed when starting from row 2)
+            else if (toCol == fromCol && toRow == 4 && fromRow == 2) {
+                // Check to see if there is a piece obstructing, otherwise return true
+                if (targetPiece == null) return true;
+                else return false;
+            }
+
+            // If wanting to move diagonal
+            else if (abs(toCol - fromCol) == 1 && toRow == fromRow + 1) {
+                // Check to see if the target piece is an enemy piece,
+                // Also ensure that the piece would not be moving out of bounds
+                if (targetPiece.getColor().equalsIgnoreCase("Black") && board.isWithinBounds(toRow, toCol))
+                    return true;
+                else return false;
+            }
+
+            // Any other desired spot will return false.
+            else {return false;}
         }
 
         if (getColor().equalsIgnoreCase("Black")) {

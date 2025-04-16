@@ -6,6 +6,7 @@ public abstract class Piece {
     int row;
     private int col;
     private String color;
+    Board board;
 
     //Constructor
     public Piece(int row, int col, String color) {
