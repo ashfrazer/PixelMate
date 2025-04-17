@@ -39,6 +39,9 @@ public class Queen extends Piece {
             if (destinationPiece == null || !destinationPiece.getColor().equals(this.getColor())) {
                 return true;
             }
+
+            // Returns false if the move would put this player's king in check
+            if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
         }
         return false;
     }

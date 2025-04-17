@@ -27,6 +27,9 @@ public class Knight extends Piece{
             return false;
         }
 
+        // Returns false if the move would put this player's king in check
+        if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
+
         // Knights move in L-shape: 2 squares in one direction and 1 square perpendicular
         return (abs(fromCol - toCol) == 2 && abs(fromRow - toRow) == 1) ||
                 (abs(fromCol - toCol) == 1 && abs(fromRow - toRow) == 2);

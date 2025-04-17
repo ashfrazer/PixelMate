@@ -41,6 +41,9 @@ public class Bishop extends Piece {
             if (destinationPiece == null || !destinationPiece.getColor().equals(this.getColor())) {
                 return true; // Destination is empty or has opponent's piece
             }
+
+            // Returns false if the move would put this player's king in check
+            if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
         }
         return false;
     }

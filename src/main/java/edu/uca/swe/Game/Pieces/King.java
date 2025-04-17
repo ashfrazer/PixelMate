@@ -22,6 +22,10 @@ public class King extends Piece {
             if (targetPiece != null && targetPiece.getColor().equals(getColor())) {
                 return false;
             }
+
+            // Returns false if the move would put this player's king in check
+            else if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
+
             return true;
         }
         return false;

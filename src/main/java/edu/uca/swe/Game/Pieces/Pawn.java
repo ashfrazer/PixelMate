@@ -19,6 +19,9 @@ public class Pawn extends Piece {
         int fromCol = getCol();
         Piece targetPiece = board.getPieceAt(toRow, toCol);
 
+        // Returns false if the move would put this player's king in check
+        if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
+
         //todo: add capture logic
         if (getColor().equalsIgnoreCase("White")) {
             // White pawn always starts at row 2

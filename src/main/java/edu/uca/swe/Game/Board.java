@@ -104,12 +104,45 @@ public class Board {
         return false;
     }
 
-    //This method will return true if the move will puts the king in check; false if it doesn't.
+    //This method will return true if the move will put the king in check; false if it doesn't.
     //We DON'T want that to be able to happen, so this will play a big role in isValidMove()
-    public boolean doesPutKingInCheck()
-    {
-        return true;
+    public boolean doesPutKingInCheck(Piece piece, int toRow, int toCol) {
+        int fromRow = piece.getRow();
+        int fromCol = piece.getCol();
+        Piece[][] b = board;
+        Piece captured = b[toRow][toCol];
+
+        //Simulates move
+        b[fromRow][fromCol] = null;
+        b[toRow][toCol] = piece;
+        piece.setPosition(toRow, toCol);
+
+        //Finds the King of respective color
+        String myColor = piece.getColor();
+        int kingRow = -1, kingCol = -1;
+        for (int r = 0; r < 8; r++) {
+            for (int c = 0; c < 8; c++) {
+                Piece p = b[r][c];
+                if (p instanceof King && p.getColor().equals(myColor)) {
+                    kingRow = r;
+                    kingCol = c;
+                    break;
+                }
+            }
+            if (kingRow != -1) break;
+        }
+
+        //Checks to see if king is under attack (oh no!)
+        boolean inCheck = isSquareUnderAttack(kingRow, kingCol, myColor);
+
+        //Undo move
+        b[fromRow][fromCol] = piece;
+        piece.setPosition(fromRow, fromCol);
+        b[toRow][toCol] = captured;
+
+        return inCheck;
     }
+
 
     private String currentTurn = "White";
 
