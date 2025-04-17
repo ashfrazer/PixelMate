@@ -41,49 +41,44 @@ public class Server extends AbstractServer {
                 setHostUsername(message.substring("H_USERNAME: ".length()).trim());
             } else if (message.startsWith("C_USERNAME: ")) {
                 setClientUsername(message.substring("C_USERNAME: ".length()).trim());
-            } else if (message.contains("[")){
-                if(client.getName().equals("Thread-1")){
-                    try {
-                        players.get("client").sendToClient(msg);
-                        //System.out.println(msg);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+            } else if (message.contains("[")) {
+                // Forward moves to the other player only
+                try {
+                    if (client.getInfo("role").equals("white")) {
+                        if (players.containsKey("client")) {
+                            players.get("client").sendToClient(msg);
+                        }
+                    } else {
+                        if (players.containsKey("host")) {
+                            players.get("host").sendToClient(msg);
+                        }
                     }
+                } catch (IOException e) {
+                    System.err.println("Error forwarding move: " + e.getMessage());
                 }
-                if(client.getName().equals("Thread-2")){
-                    try {
-                        players.get("host").sendToClient(msg);
-                    System.out.println(msg);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            } else{sendToAllClients(msg);}
+            } else {
+                // Only send non-move messages to all clients
+                sendToAllClients(msg);
+            }
         }
-        //sendToAllClients(msg);
 
-        // Connection -- share usernames
-        //if (players.containsKey("host") && players.containsKey("client")) {
-          //  System.out.println("Host and Client are now connected!");
-            //sendToAllClients("H_USERNAME: " + getHostUsername());
-        //    sendToAllClients("C_USERNAME: " + getClientUsername());
-          //  try {
-            //    ConnectionToClient hostConn = players.get("host");
-              //  ConnectionToClient clientConn = players.get("client");
+        // Share usernames when both players are connected
+        if (players.containsKey("host") && players.containsKey("client")) {
+            System.out.println("Host and Client are now connected!");
+            try {
+                ConnectionToClient hostConn = players.get("host");
+                ConnectionToClient clientConn = players.get("client");
 
-                //hostConn.sendToClient("Both players connected. Game can start!");
-             //   clientConn.sendToClient("Both players connected. Game can start!");
+                String host = (hostUsername != null) ? hostUsername : "Unknown";
+                String clientName = (clientUsername != null) ? clientUsername : "Unknown";
+                String userMessage = "USERNAMES:" + host + "," + clientName;
 
-            //    String host = (hostUsername != null) ? hostUsername : "Unknown";
-              //  String clientName = (clientUsername != null) ? clientUsername : "Unknown";
-                //String userMessage = "USERNAMES:" + host + "," + clientName;
-
-        //        hostConn.sendToClient(userMessage);
-          //      clientConn.sendToClient(userMessage);
-            //} catch (IOException e) {
-              //  e.printStackTrace();
-            //}
-        //}
+                hostConn.sendToClient(userMessage);
+                clientConn.sendToClient(userMessage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override

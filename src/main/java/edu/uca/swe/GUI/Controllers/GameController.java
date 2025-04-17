@@ -90,9 +90,24 @@ public class GameController implements ActionListener {
 
     public void handleOther(String msg) throws IOException {
         String[] splitMsg = msg.split(" ");
-        int[] start = {splitMsg[4].charAt(1) - '0', splitMsg[4].charAt(3) - '0'};
-        int[] end = {splitMsg[6].charAt(1) - '0', splitMsg[6].charAt(3) - '0'};
-        selectedPiece = board.getPieceAt(start[0], start[1]);
-        handleTileClick(end[0], end[1]);
+        String[] startCoords = splitMsg[4].replace("[", "").replace("]", "").split(",");
+        String[] endCoords = splitMsg[6].replace("[", "").replace("]", "").split(",");
+
+        int startRow = Integer.parseInt(startCoords[0]);
+        int startCol = Integer.parseInt(startCoords[1]);
+        int endRow = Integer.parseInt(endCoords[0]);
+        int endCol = Integer.parseInt(endCoords[1]);
+
+        selectedPiece = board.getPieceAt(startRow, startCol);
+        if (selectedPiece != null) {
+            Move move = new Move(board, selectedPiece, startRow, startCol, endRow, endCol);
+            if (move.isValid()) {
+                move.makeMove();
+                gamePanel.updateBoard();
+                gamePanel.revalidate();
+                gamePanel.repaint();
+            }
+            selectedPiece = null;
+        }
     }
 }

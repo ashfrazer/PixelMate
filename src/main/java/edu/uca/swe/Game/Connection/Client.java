@@ -65,11 +65,18 @@ public class Client extends AbstractClient {
                 }
                 cardLayout.show(container, "game");
             });
-        } else if (message.contains("[")){
-            try {
-                gamePanel.getGameController().handleOther(message);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        } else if (message.contains("[")) {
+            String role = gamePanel != null ? gamePanel.getPlayerRole() : "";
+            if (!message.startsWith(role + " moved")) {
+                SwingUtilities.invokeLater(() -> {
+                    if (gamePanel != null) {
+                        try {
+                            gamePanel.getGameController().handleOther(message);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
         }
 

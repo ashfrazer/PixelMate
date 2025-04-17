@@ -19,15 +19,28 @@ public class Bishop extends Piece {
         //Bishops can move horizontally so the absolute difference of
         //their next position minus their current position should be the
         //same for both Row and Col.
-        if (abs(toRow - currentRow) == abs(toCol - currentCol)) {
+        if (Math.abs(toRow - currentRow) == Math.abs(toCol - currentCol)) {
+            // Determine the direction of movement
+            int rowStep = (toRow > currentRow) ? 1 : -1;
+            int colStep = (toCol > currentCol) ? 1 : -1;
 
-            //I think all of these todos could come from the Rules() class
-            //todo: add check to make sure King is not in Check or if in check move will block check
-            //todo: add logic to make sure move wont put our king in Check
-            //todo: add logic to make sure not moving through another Piece
-            setPosition(toRow, toCol);
-            //todo: add logic to take a piece if positions overlap
-            //todo: pass the turn to next player
+            // Check each square along the path
+            int checkRow = currentRow + rowStep;
+            int checkCol = currentCol + colStep;
+
+            while (checkRow != toRow && checkCol != toCol) {
+                if (board.getPieceAt(checkRow, checkCol) != null) {
+                    return false; // Path is blocked
+                }
+                checkRow += rowStep;
+                checkCol += colStep;
+            }
+
+            // Check the destination square
+            Piece destinationPiece = board.getPieceAt(toRow, toCol);
+            if (destinationPiece == null || !destinationPiece.getColor().equals(this.getColor())) {
+                return true; // Destination is empty or has opponent's piece
+            }
         }
         return false;
     }
