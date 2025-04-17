@@ -73,9 +73,12 @@ public class GameController implements ActionListener {
             move.makeMove();
             gamePanel.revalidate();
             gamePanel.repaint();
-            gamePanel.getClient().sendToServer
-                    (gamePanel.getPlayerRole() + " moved " + selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
-        } else {
+            if (selectedPiece.getColor().equals(Color)) {
+                gamePanel.getClient().sendToServer
+                        (gamePanel.getPlayerRole() + " moved " + selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
+
+                }
+            } else {
             System.out.println("Invalid move.");
         }
         // Deselect piece
