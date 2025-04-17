@@ -24,6 +24,12 @@ public class Move {
         // Check if out of bounds
         if (toRow < 0 || toRow >= 8 || toCol < 0 || toCol >= 8) return false;
 
+        // Check if it's the correct player's turn
+        if (!piece.getColor().equals(board.getCurrentTurn())) {
+            System.out.println("Not your turn! Current turn: " + board.getCurrentTurn());
+            return false;
+        }
+
         // Store piece in desired spot
         Piece destinationPiece = board.getBoard()[toRow][toCol];
 
@@ -33,16 +39,9 @@ public class Move {
         // return whether valid or not
         return piece.isValidMove(toRow, toCol, board);
     }
-    
+
     public void makeMove() {
-        // Store piece into new spot if valid move
-        if (isValid()) {
-            Piece[][] boardArray = board.getBoard();
-            boardArray[fromRow][fromCol] = null;
-            boardArray[toRow][toCol] = piece;
-            piece.setPosition(toRow, toCol);
-        } else {
-            System.out.println("Invalid move.");
-        }
+        // Use the board's movePiece method which handles turn switching
+        board.movePiece(piece, toRow, toCol);
     }
 }

@@ -31,6 +31,12 @@ public class GameController implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        // Check if it's the player's turn
+        if (!board.getCurrentTurn().equals(Color)) {
+            System.out.println("Not your turn! Current turn: " + board.getCurrentTurn());
+            return;
+        }
+
         // identify which tile was clicked
         JButton clickedButton = (JButton) e.getSource();
 
@@ -54,7 +60,7 @@ public class GameController implements ActionListener {
                     selectedPiece = board.getPieceAt(row, col);
                 }
             }
-        }else {
+        } else {
             try {
                 handleTileClick(row, col);
             } catch (IOException ex) {
@@ -64,10 +70,18 @@ public class GameController implements ActionListener {
     }
 
     public void handleTileClick(int row, int col) throws IOException {
+        // Check if it's still the player's turn
+        if (!board.getCurrentTurn().equals(Color)) {
+            System.out.println("Not your turn! Current turn: " + board.getCurrentTurn());
+            selectedPiece = null;
+            return;
+        }
+
         // Attempt a move
         selectedRow = selectedPiece.getRow();
         selectedCol = selectedPiece.getCol();
         Move move = new Move(board, selectedPiece, selectedRow, selectedCol, row, col);
+
         // If move is valid, make the move
         if (move.isValid()) {
             move.makeMove();
@@ -76,11 +90,11 @@ public class GameController implements ActionListener {
             if (selectedPiece.getColor().equals(Color)) {
                 gamePanel.getClient().sendToServer
                         (gamePanel.getPlayerRole() + " moved " + selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
-
-                }
-            } else {
+            }
+        } else {
             System.out.println("Invalid move.");
         }
+
         // Deselect piece
         selectedPiece = null;
 

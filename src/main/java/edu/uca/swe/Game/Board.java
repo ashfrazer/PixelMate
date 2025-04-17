@@ -50,22 +50,28 @@ public class Board {
         int fromRow = piece.getRow();
         int fromCol = piece.getCol();
 
-        if(isWithinBounds(toRow, toCol) && piece.getColor().equals(currentTurn))
+        // First check if it's the correct player's turn
+        if (!piece.getColor().equals(currentTurn)) {
+            System.out.println("Not your turn! Current turn: " + currentTurn);
+            return;
+        }
+
+        // Then check if the move is valid
+        if(isWithinBounds(toRow, toCol) && piece.isValidMove(toRow, toCol, this))
         {
-            // Temporarily move the piece to check if the move is valid
+            // Store any piece that might be captured
             Piece capturedPiece = board[toRow][toCol];
+
+            // Update the piece's position first
+            piece.setPosition(toRow, toCol);
+
+            // Then update the board
             board[toRow][toCol] = piece;
             board[fromRow][fromCol] = null;
 
-            if(piece.isValidMove(toRow, toCol, this)) {
-                piece.setPosition(toRow, toCol);
-                switchTurn();
-            } else {
-                // Revert the move if it's not valid
-                board[fromRow][fromCol] = piece;
-                board[toRow][toCol] = capturedPiece;
-                piece.setPosition(fromRow, fromCol);
-            }
+            // Switch turns after a successful move
+            switchTurn();
+            System.out.println("Turn switched to: " + currentTurn + " after " + piece.getColor() + " moved");
         }
     }
 
