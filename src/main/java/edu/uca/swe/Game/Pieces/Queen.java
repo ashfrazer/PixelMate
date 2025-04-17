@@ -16,16 +16,29 @@ public class Queen extends Piece {
         int currentCol = getCol();
 
         // Queens can move like Rooks or Bishops
-        if (((currentRow == toRow && currentCol != toCol ) || (currentCol == toCol && currentRow != toRow)) ||
-                (abs(toRow - currentRow) == abs(toCol - currentCol))){
+        if (((currentRow == toRow && currentCol != toCol) || (currentCol == toCol && currentRow != toRow)) ||
+                (abs(toRow - currentRow) == abs(toCol - currentCol))) {
 
-            //I think all of these todos could come from the Rules() class
-            //todo: add check to make sure King is not in Check or if in check move will block check
-            //todo: add logic to make sure move wont put our king in Check
-            //todo: add logic to make sure not moving through another Piece
-            setPosition(toRow, toCol);
-            //todo: add logic to take a piece if positions overlap
-            //todo: pass the turn to next player
+            // Determine movement direction
+            int rowStep = (toRow > currentRow) ? 1 : (toRow < currentRow) ? -1 : 0;
+            int colStep = (toCol > currentCol) ? 1 : (toCol < currentCol) ? -1 : 0;
+            int checkRow = currentRow + rowStep;
+            int checkCol = currentCol + colStep;
+
+            // Check if path is clear
+            while (checkRow != toRow || checkCol != toCol) {
+                if (board.getPieceAt(checkRow, checkCol) != null) {
+                    return false;
+                }
+                checkRow += rowStep;
+                checkCol += colStep;
+            }
+
+            // Check if destination is empty or has opponent's piece
+            Piece destinationPiece = board.getPieceAt(toRow, toCol);
+            if (destinationPiece == null || !destinationPiece.getColor().equals(this.getColor())) {
+                return true;
+            }
         }
         return false;
     }

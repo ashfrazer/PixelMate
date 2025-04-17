@@ -50,11 +50,22 @@ public class Board {
         int fromRow = piece.getRow();
         int fromCol = piece.getCol();
 
-        if(isWithinBounds(toRow, toCol))
+        if(isWithinBounds(toRow, toCol) && piece.getColor().equals(currentTurn))
         {
+            // Temporarily move the piece to check if the move is valid
+            Piece capturedPiece = board[toRow][toCol];
             board[toRow][toCol] = piece;
             board[fromRow][fromCol] = null;
-            piece.setPosition(toRow, toCol);
+
+            if(piece.isValidMove(toRow, toCol, this)) {
+                piece.setPosition(toRow, toCol);
+                switchTurn();
+            } else {
+                // Revert the move if it's not valid
+                board[fromRow][fromCol] = piece;
+                board[toRow][toCol] = capturedPiece;
+                piece.setPosition(fromRow, fromCol);
+            }
         }
     }
 
@@ -73,7 +84,12 @@ public class Board {
             {
                 Piece piece = board[i][j];
                 if (piece != null && piece.getColor().equals(opponentColor))  {
-                    if (piece.isValidMove(row, col,this)){
+                    // Temporarily move the piece to check if it can attack the square
+                    Piece originalPiece = board[row][col];
+                    board[row][col] = null;
+                    boolean canAttack = piece.isValidMove(row, col, this);
+                    board[row][col] = originalPiece;
+                    if (canAttack) {
                         return true;
                     }
                 }
