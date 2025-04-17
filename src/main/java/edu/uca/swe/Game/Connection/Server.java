@@ -41,24 +41,26 @@ public class Server extends AbstractServer {
                 setHostUsername(message.substring("H_USERNAME: ".length()).trim());
             } else if (message.startsWith("C_USERNAME: ")) {
                 setClientUsername(message.substring("C_USERNAME: ".length()).trim());
-            } //else if (message.contains("[")){
-                //if(client.getName().equals("Thread-1")){
-                  //  try {
-                    //    players.get("client").sendToClient(msg);
-                    //} catch (IOException e) {
-                      //  throw new RuntimeException(e);
-                    //}
-                //}
-                //if(client.getName().equals("Thread-2")){
-                  //  try {
-                    //    players.get("host").sendToClient(msg);
-                    //} catch (IOException e) {
-                      //  throw new RuntimeException(e);
-                    //}
-                //}
-            //}
+            } else if (message.contains("[")){
+                if(client.getName().equals("Thread-1")){
+                    try {
+                        players.get("client").sendToClient(msg);
+                        //System.out.println(msg);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+                if(client.getName().equals("Thread-2")){
+                    try {
+                        players.get("host").sendToClient(msg);
+                    System.out.println(msg);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            } else{sendToAllClients(msg);}
         }
-        sendToAllClients(msg);
+        //sendToAllClients(msg);
 
         // Connection -- share usernames
         //if (players.containsKey("host") && players.containsKey("client")) {

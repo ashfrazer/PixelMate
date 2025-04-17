@@ -66,11 +66,11 @@ public class Client extends AbstractClient {
                 cardLayout.show(container, "game");
             });
         } else if (message.contains("[")){
-            //try {
-               // gamePanel.getGameController().handleOther(message);
-            //} catch (IOException e) {
-               // throw new RuntimeException(e);
-           // }
+            try {
+                gamePanel.getGameController().handleOther(message);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
     }
