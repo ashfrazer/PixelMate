@@ -10,6 +10,7 @@ import ocsf.client.AbstractClient;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class Client extends AbstractClient {
 
@@ -59,11 +60,19 @@ public class Client extends AbstractClient {
             SwingUtilities.invokeLater(() -> {
                 if (gamePanel == null) {
                     gamePanel = new GamePanel(board, "client", this);
+                    this.setGamePanel(gamePanel);
                     container.add(gamePanel, "game");
                 }
                 cardLayout.show(container, "game");
             });
+        } else if (message.contains("[")){
+            //try {
+               // gamePanel.getGameController().handleOther(message);
+            //} catch (IOException e) {
+               // throw new RuntimeException(e);
+           // }
         }
+
     }
 
     public void setHostPanel(HostPanel hostPanel) {

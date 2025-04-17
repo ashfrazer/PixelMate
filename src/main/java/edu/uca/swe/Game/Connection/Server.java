@@ -35,21 +35,30 @@ public class Server extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        // Username messages
-        if (msg instanceof String) {
+        } else if (msg instanceof String) {
             String message = (String) msg;
             if (message.startsWith("H_USERNAME: ")) {
                 setHostUsername(message.substring("H_USERNAME: ".length()).trim());
             } else if (message.startsWith("C_USERNAME: ")) {
                 setClientUsername(message.substring("C_USERNAME: ".length()).trim());
-            } else{
-                sendToAllClients(msg);
-            }
+            } //else if (message.contains("[")){
+                //if(client.getName().equals("Thread-1")){
+                  //  try {
+                    //    players.get("client").sendToClient(msg);
+                    //} catch (IOException e) {
+                      //  throw new RuntimeException(e);
+                    //}
+                //}
+                //if(client.getName().equals("Thread-2")){
+                  //  try {
+                    //    players.get("host").sendToClient(msg);
+                    //} catch (IOException e) {
+                      //  throw new RuntimeException(e);
+                    //}
+                //}
+            //}
         }
-
-
+        sendToAllClients(msg);
 
         // Connection -- share usernames
         //if (players.containsKey("host") && players.containsKey("client")) {
@@ -73,8 +82,6 @@ public class Server extends AbstractServer {
               //  e.printStackTrace();
             //}
         //}
-
-        this.sendToAllClients(msg);
     }
 
     @Override

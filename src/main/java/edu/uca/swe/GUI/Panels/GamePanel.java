@@ -139,4 +139,6 @@ public class GamePanel extends JPanel {
     public String getPlayerRole(){return playerRole;}
 
     public Client getClient(){return client;}
+
+    public GameController getGameController(){return gameController;}
 }

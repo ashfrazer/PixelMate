@@ -84,4 +84,12 @@ public class GameController implements ActionListener {
         // Update board
         gamePanel.updateBoard();
     }
+
+    //public void handleOther(String msg) throws IOException {
+      //  String[] splitMsg = msg.split(" ");
+        //int[] start = {splitMsg[4].charAt(1), splitMsg[4].charAt(3)};
+     //   int[] end = {splitMsg[6].charAt(1), splitMsg[6].charAt(3)};
+       // selectedPiece = board.getPieceAt(start[0], start[1]);
+        //handleTileClick(end[0], end[1]);
+    //}
 }
