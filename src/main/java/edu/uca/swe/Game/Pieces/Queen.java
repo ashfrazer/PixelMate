@@ -12,38 +12,40 @@ public class Queen extends Piece {
 
     //Checks to make sure move is valid and if so sets the pieces' new position and passes turn
     public boolean isValidMove(int toRow, int toCol, Board board) {
-        int currentRow = getRow();
-        int currentCol = getCol();
+        int fromRow = getRow();
+        int fromCol = getCol();
 
-        // Queens can move like Rooks or Bishops
-        if (((currentRow == toRow && currentCol != toCol) || (currentCol == toCol && currentRow != toRow)) ||
-                (abs(toRow - currentRow) == abs(toCol - currentCol))) {
-
-            // Determine movement direction
-            int rowStep = (toRow > currentRow) ? 1 : (toRow < currentRow) ? -1 : 0;
-            int colStep = (toCol > currentCol) ? 1 : (toCol < currentCol) ? -1 : 0;
-            int checkRow = currentRow + rowStep;
-            int checkCol = currentCol + colStep;
-
-            // Check if path is clear
-            while (checkRow != toRow || checkCol != toCol) {
-                if (board.getPieceAt(checkRow, checkCol) != null) {
-                    return false;
-                }
-                checkRow += rowStep;
-                checkCol += colStep;
-            }
-
-            // Check if destination is empty or has opponent's piece
-            Piece destinationPiece = board.getPieceAt(toRow, toCol);
-            if (destinationPiece == null || !destinationPiece.getColor().equals(this.getColor())) {
-                return true;
-            }
-
-            // Returns false if the move would put this player's king in check
-            if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
+        // First check if the target square is within bounds
+        if (!board.isWithinBounds(toRow, toCol)) {
+            return false;
         }
-        return false;
+
+        // Check if target square has a piece of the same color
+        Piece targetPiece = board.getPieceAt(toRow, toCol);
+        if (targetPiece != null && targetPiece.getColor().equals(this.getColor())) {
+            return false;
+        }
+
+        // Queens move in straight lines or diagonally
+        if (fromRow != toRow && fromCol != toCol && Math.abs(fromRow - toRow) != Math.abs(fromCol - toCol)) {
+            return false;
+        }
+
+        // Check if there are any pieces in the path
+        int rowStep = (toRow > fromRow) ? 1 : (toRow < fromRow) ? -1 : 0;
+        int colStep = (toCol > fromCol) ? 1 : (toCol < fromCol) ? -1 : 0;
+        int currentRow = fromRow + rowStep;
+        int currentCol = fromCol + colStep;
+
+        while (currentRow != toRow || currentCol != toCol) {
+            if (board.getPieceAt(currentRow, currentCol) != null) {
+                return false;
+            }
+            currentRow += rowStep;
+            currentCol += colStep;
+        }
+
+        return true;
     }
 
 }

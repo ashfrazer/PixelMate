@@ -11,35 +11,48 @@ public class Rook extends Piece {
 
     //Checks to make sure move is valid and if so sets the pieces' new position and passes turn
     public boolean isValidMove(int toRow, int toCol, Board board) {
-        int currentRow = getRow();
-        int currentCol = getCol();
+        int fromRow = getRow();
+        int fromCol = getCol();
 
-        //Rooks can move on the same row or the same col but not both
-        if ((currentRow == toRow && currentCol != toCol) || (currentCol == toCol && currentRow != toRow)) {
-            // Determine movement direction
-            int rowStep = (toRow > currentRow) ? 1 : (toRow < currentRow) ? -1 : 0;
-            int colStep = (toCol > currentCol) ? 1 : (toCol < currentCol) ? -1 : 0;
-            int checkRow = currentRow + rowStep;
-            int checkCol = currentCol + colStep;
+        // First check if the target square is within bounds
+        if (!board.isWithinBounds(toRow, toCol)) {
+            return false;
+        }
 
-            // Check if path is clear
-            while (checkRow != toRow || checkCol != toCol) {
-                if (board.getPieceAt(checkRow, checkCol) != null) {
+        // Check if target square has a piece of the same color
+        Piece targetPiece = board.getPieceAt(toRow, toCol);
+        if (targetPiece != null && targetPiece.getColor().equals(this.getColor())) {
+            return false;
+        }
+
+        // Rooks move in straight lines
+        if (fromRow != toRow && fromCol != toCol) {
+            return false;
+        }
+
+        // Check if there are any pieces in the path
+        if (fromRow == toRow) {
+            // Moving horizontally
+            int colStep = (toCol > fromCol) ? 1 : -1;
+            int currentCol = fromCol + colStep;
+            while (currentCol != toCol) {
+                if (board.getPieceAt(fromRow, currentCol) != null) {
                     return false;
                 }
-                checkRow += rowStep;
-                checkCol += colStep;
+                currentCol += colStep;
             }
-
-            // Check if destination is empty or has opponent's piece
-            Piece destinationPiece = board.getPieceAt(toRow, toCol);
-            if (destinationPiece == null || !destinationPiece.getColor().equals(this.getColor())) {
-                return true;
+        } else {
+            // Moving vertically
+            int rowStep = (toRow > fromRow) ? 1 : -1;
+            int currentRow = fromRow + rowStep;
+            while (currentRow != toRow) {
+                if (board.getPieceAt(currentRow, fromCol) != null) {
+                    return false;
+                }
+                currentRow += rowStep;
             }
-
-            // Returns false if the move would put this player's king in check
-            if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
         }
-        return false;
+
+        return true;
     }
 }

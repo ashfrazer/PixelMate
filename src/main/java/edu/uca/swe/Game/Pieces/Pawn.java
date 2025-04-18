@@ -17,120 +17,46 @@ public class Pawn extends Piece {
     public boolean isValidMove(int toRow, int toCol, Board board) {
         int fromRow = getRow();
         int fromCol = getCol();
+
+        // First check if the target square is within bounds
+        if (!board.isWithinBounds(toRow, toCol)) {
+            return false;
+        }
+
+        // Check if target square has a piece of the same color
         Piece targetPiece = board.getPieceAt(toRow, toCol);
-
-        // Returns false if the move would put this player's king in check
-        if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
-
-        //todo: add capture logic
-        if (getColor().equalsIgnoreCase("White")) {
-            // White pawn always starts at row 2
-            // Moving one forward
-            if (toCol == fromCol && toRow == fromRow + 1) {
-                // Check to see if there is a piece obstructing, otherwise return true
-                if (targetPiece == null) return true;
-                else return false;
-            }
-
-            // Moving two forward (only allowed when starting from row 2)
-            else if (toCol == fromCol && toRow == 3 && fromRow == 1) {
-                // Check to see if there is a piece obstructing, otherwise return true
-                if (targetPiece == null) return true;
-                else return false;
-            }
-
-            // If wanting to move diagonal
-            else if (abs(toCol - fromCol) == 1 && toRow == fromRow + 1) {
-                // Check to see if the target piece is an enemy piece,
-                // Also ensure that the piece would not be moving out of bounds
-                if (targetPiece != null){
-                    if (targetPiece.getColor().equalsIgnoreCase("Black") && board.isWithinBounds(toRow, toCol))
-                        return true;
-                }
-                else return false;
-            }
-
-            // Any other desired spot will return false.
-            else {return false;}
+        if (targetPiece != null && targetPiece.getColor().equals(this.getColor())) {
+            return false;
         }
 
-        if (getColor().equalsIgnoreCase("Black")) {
-            // black starts at row 6, moves up (-1)
-            if (toCol == fromCol && toRow == fromRow - 1) {
-                // Check to see if there is a piece obstructing, otherwise return true
-                if (targetPiece == null) return true;
-                else return false;
-            }
-            else if (toCol == fromCol && toRow == 4 && fromRow == 6) {
-                // Check to see if there is a piece obstructing, otherwise return true
-                if (targetPiece == null) return true;
-                else return false;
-            }
-            else if (abs(toCol - fromCol) == 1 && toRow == fromRow - 1) {
-                // Check to see if the target piece is an enemy piece,
-                // Also ensure that the piece would not be moving out of bounds
-                if (targetPiece != null){
-                    if (targetPiece.getColor().equalsIgnoreCase("White") && board.isWithinBounds(toRow, toCol))
-                        return true;
-                }
-                else return false;
-            }
+        // Pawns can only move forward
+        int direction = this.getColor().equals("White") ? 1 : -1;
+        if ((toRow - fromRow) * direction <= 0) {
+            return false;
         }
 
-        return false;
+        // Check if moving diagonally (capturing)
+        if (fromCol != toCol) {
+            // Must be moving exactly one square diagonally
+            if (Math.abs(fromCol - toCol) != 1 || Math.abs(fromRow - toRow) != 1) {
+                return false;
+            }
+            // Must be capturing an opponent's piece
+            return targetPiece != null && !targetPiece.getColor().equals(this.getColor());
+        }
+
+        // Moving straight forward
+        // Can't capture when moving straight
+        if (targetPiece != null) {
+            return false;
+        }
+
+        // Can move one or two squares forward from starting position
+        if (fromRow == (this.getColor().equals("White") ? 1 : 6)) {
+            return Math.abs(toRow - fromRow) <= 2;
+        }
+
+        // Otherwise can only move one square forward
+        return Math.abs(toRow - fromRow) == 1;
     }
-
-//    //Checks to make sure move is valid and if so sets the pieces' new position and passes turn
-//    public void isValidMove(int toRow, int toCol) {
-//        int currentRow = getRow();
-//        int currentCol = getCol();
-//
-//        // Pawns can move forward 1 spce normally, White moves up the rows
-//        if (currentCol == toCol && getColor().equals("white") && currentRow == toRow + 1) {
-//
-//            //I think all of these todos could come from the Rules() class
-//            //todo: add check to make sure King is not in Check or if in check move will block check
-//            //todo: add logic to make sure move wont put our king in Check
-//            setPosition(toRow, toCol);
-//            //todo: add logic to take a piece if positions overlap
-//            //todo: pass the turn to next player
-//        }
-//
-//        // Pawns can move forward 1 spce normally, Black moves down the rows
-//        if (currentCol == toCol && getColor().equals("Black") && currentRow == toRow - 1) {
-//
-//            //I think all of these todos could come from the Rules() class
-//            //todo: add check to make sure King is not in Check or if in check move will block check
-//            //todo: add logic to make sure move wont put our king in Check
-//            setPosition(toRow, toCol);
-//            //todo: add logic to take a piece if positions overlap
-//            //todo: pass the turn to next player
-//        }
-//
-//        //pawns move forward 2 spaces if on starting position
-//        if (currentCol == toCol && getColor().equals("White") && currentRow == toRow + 2 && currentRow == 1) {
-//
-//            //I think all of these todos could come from the Rules() class
-//            //todo: add check to make sure King is not in Check or if in check move will block check
-//            //todo: add logic to make sure move wont put our king in Check
-//            setPosition(toRow, toCol);
-//            //todo: add logic to take a piece if positions overlap
-//            //todo: pass the turn to next player
-//        }
-//
-//        //pawns move forward 2 spaces if on starting position
-//        if (currentCol == toCol && getColor().equals("Black") && currentRow == toRow - 2 && currentRow == 6) {
-//
-//            //I think all of these todos could come from the Rules() class
-//            //todo: add check to make sure King is not in Check or if in check move will block check
-//            //todo: add logic to make sure move wont put our king in Check
-//            setPosition(toRow, toCol);
-//            //todo: add logic to take a piece if positions overlap
-//            //todo: pass the turn to next player
-//        }
-//
-//        //todo: add logic to attack diagonal pieces (need some kind of checkPiece() thing in board probably
-//        //todo: add en pesant logic, need to check game history
-//        //todo: add check for promotion
-//    }
 }

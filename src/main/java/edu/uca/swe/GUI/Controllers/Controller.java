@@ -15,6 +15,7 @@ import java.util.Objects;
 
 public class Controller implements ActionListener {
     private JPanel container;
+    private CardLayout cardLayout;
     private Font font;
     private boolean loginSuccessful;
     private Database database;
@@ -25,6 +26,7 @@ public class Controller implements ActionListener {
 
     public Controller(JPanel container) {
         this.container = container;
+        this.cardLayout = (CardLayout) container.getLayout();
         this.loginSuccessful = false;
         this.database = new Database();
         this.playerRole = "";
@@ -33,7 +35,6 @@ public class Controller implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        CardLayout cardLayout = (CardLayout) container.getLayout();
         LoginPanel loginPanel = (LoginPanel) container.getComponent(1);
         HostPanel hostPanel = (HostPanel) container.getComponent(5);
         JoinPanel joinPanel = (JoinPanel) container.getComponent(6);
@@ -56,9 +57,44 @@ public class Controller implements ActionListener {
             cardLayout.show(container, "credits");
         }
         // Go back to the Main Menu
-        else if (command.equals("Back")) {
+        else if (command.equals("Back") || command.equals("mainmenu")) {
             System.out.println("Going back to the main menu!");
+            // If we're in a game, send quit message to server
+            if (client != null) {
+                try {
+                    client.sendToServer("quit");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
             cardLayout.show(container, "mainmenu");
+        }
+        // Restart the game
+        else if (command.equals("playagain")) {
+            System.out.println("Restarting game!");
+            // Create a new board
+            Board board = new Board(this);
+            // Create a new game panel with the same role and client
+            gamePanel = new GamePanel(board, playerRole, client);
+            // Update the client's game panel
+            client.setGamePanel(gamePanel);
+            // Remove the old game panel
+            container.remove(7);
+            // Add the new game panel
+            container.add(gamePanel, "game");
+            // Show the game panel
+            cardLayout.show(container, "game");
+            // Send start message to server
+            try {
+                client.sendToServer("start");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        // Go to Play Menu
+        else if (command.equals("playmenu")) {
+            System.out.println("Going to play menu!");
+            cardLayout.show(container, "playmenu");
         }
         // Submit credentials for validation
         else if (command.equals("Enter")) {
@@ -76,7 +112,7 @@ public class Controller implements ActionListener {
                 loginPanel.setError("Login failed. Please try again.");
                 System.out.println("Login failed.");
             }
-        // Register new account
+            // Register new account
         } else if (command.equals("Register")) {
             System.out.println("Registering...");
             CreateAccountPanel createAccountPanel = (CreateAccountPanel) container.getComponent(2);
@@ -93,7 +129,7 @@ public class Controller implements ActionListener {
             } else {
                 System.out.println("Password creation failed.");
             }
-        // Host a game
+            // Host a game
         } else if (command.equals("Host")) {
             System.out.println("Now hosting...");
             playerRole = "host";
@@ -106,6 +142,7 @@ public class Controller implements ActionListener {
                 try {
                     client = new edu.uca.swe.Game.Connection.Client(serverIP.trim(), 5555, username, container,
                             cardLayout);
+                    client.setController(this);
                     client.setHostPanel(hostPanel);
                     client.setJoinPanel(joinPanel);
                     client.openConnection();
@@ -120,7 +157,7 @@ public class Controller implements ActionListener {
             } else {
                 System.out.println("Host cancelled or invalid IP.");
             }
-        // Join a game
+            // Join a game
         } else if (command.equals("Join")) {
             System.out.println("Now joining...");
             playerRole = "client";
@@ -133,6 +170,7 @@ public class Controller implements ActionListener {
                 try {
                     client = new edu.uca.swe.Game.Connection.Client(serverIP.trim(), 5555, username, container,
                             cardLayout);
+                    client.setController(this);
                     client.setHostPanel(hostPanel);
                     client.setJoinPanel(joinPanel);
                     client.openConnection();
@@ -150,20 +188,20 @@ public class Controller implements ActionListener {
             } else {
                 System.out.println("Join cancelled or invalid IP.");
             }
-        // Log out of account
+            // Log out of account
         } else if (command.equals("Logout")) {
             System.out.println("Logging out!");
             loginSuccessful = false;
             cardLayout.show(container, "mainmenu");
-        // Go back to menu
+            // Go back to menu
         } else if (command.equals("Return")) {
             System.out.println("Going back to menu.");
             cardLayout.show(container, "playmenu");
-        // Start the game
+            // Start the game
         } else if (command.equals("Start")) {
             System.out.println("Starting game!");
             // Pass a board into a new GamePanel obj (to maintain state)
-            Board board = new Board();
+            Board board = new Board(this);
             gamePanel = new GamePanel(board, playerRole, client);
 
             client.setGamePanel(gamePanel);
@@ -234,4 +272,25 @@ public class Controller implements ActionListener {
     }
 
     public Client getClient(){return client;}
+
+    public void showGameOver(String winner) {
+        // Remove any existing game over panel
+        Component[] components = container.getComponents();
+        for (Component comp : components) {
+            if (comp instanceof GameOverPanel) {
+                container.remove(comp);
+            }
+        }
+
+        // Create and add new game over panel
+        GameOverPanel gameOverPanel = new GameOverPanel(this, winner);
+        container.add(gameOverPanel, "gameover");
+
+        // Show the game over panel
+        cardLayout.show(container, "gameover");
+
+        // Force a repaint
+        container.revalidate();
+        container.repaint();
+    }
 }

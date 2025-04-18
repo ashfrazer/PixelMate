@@ -1,12 +1,20 @@
 package edu.uca.swe.Game;
 
 import edu.uca.swe.Game.Pieces.*;
+import edu.uca.swe.GUI.Controllers.Controller;
 
 public class Board {
     private Piece[][] board;
+    private Controller controller;
+
+    // No-argument constructor for testing
+    public Board() {
+        this(null);
+    }
 
     // Constructor initializes the board and pieces
-    public Board() {
+    public Board(Controller controller) {
+        this.controller = controller;
         board = new Piece[8][8];
         String[] InitializeColor = {"White", "Black"};
         int[] InitializeHelper = {0, 1, 2, 7, 6, 5};
@@ -67,6 +75,16 @@ public class Board {
             // Then update the board
             board[toRow][toCol] = piece;
             board[fromRow][fromCol] = null;
+
+            // Check if a king was captured
+            if (capturedPiece instanceof King) {
+                // Show game over panel with the winner's color
+                String winner = capturedPiece.getColor().equals("White") ? "Black" : "White";
+                if (controller != null) {
+                    controller.showGameOver(winner);
+                }
+                return;
+            }
 
             // Switch turns after a successful move
             switchTurn();

@@ -35,6 +35,20 @@ public class Server extends AbstractServer {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        } else if (msg.equals("quit")) {
+            // If a player quits, disconnect both players
+            try {
+                if (players.containsKey("host")) {
+                    players.get("host").sendToClient("quit");
+                }
+                if (players.containsKey("client")) {
+                    players.get("client").sendToClient("quit");
+                }
+                // Clear the players map
+                players.clear();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         } else if (msg instanceof String) {
             String message = (String) msg;
             if (message.startsWith("H_USERNAME: ")) {

@@ -12,22 +12,24 @@ public class King extends Piece {
 
     //Checks to make sure move is valid
     public boolean isValidMove(int toRow, int toCol, Board board) {
-        int currentRow = getRow();
-        int currentCol = getCol();
+        int fromRow = getRow();
+        int fromCol = getCol();
 
-        //The King can move one space in any direction
-        if ((abs(toRow - currentRow) <= 1 && abs(toCol - currentCol) <= 1)) {
-            // Check if target square is occupied by piece of the same color
-            Piece targetPiece = board.getPieceAt(toRow, toCol);
-            if (targetPiece != null && targetPiece.getColor().equals(getColor())) {
-                return false;
-            }
-
-            // Returns false if the move would put this player's king in check
-            else if (board.doesPutKingInCheck(this, toRow, toCol)) {return false;}
-
-            return true;
+        // First check if the target square is within bounds
+        if (!board.isWithinBounds(toRow, toCol)) {
+            return false;
         }
-        return false;
+
+        // Check if target square has a piece of the same color
+        Piece targetPiece = board.getPieceAt(toRow, toCol);
+        if (targetPiece != null && targetPiece.getColor().equals(this.getColor())) {
+            return false;
+        }
+
+        // Kings can move one square in any direction
+        int rowDiff = Math.abs(fromRow - toRow);
+        int colDiff = Math.abs(fromCol - toCol);
+
+        return rowDiff <= 1 && colDiff <= 1;
     }
 }

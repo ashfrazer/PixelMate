@@ -84,25 +84,52 @@ public class GameController implements ActionListener {
 
         // If move is valid, make the move
         if (move.isValid()) {
+            // Store the piece that might be captured
+            Piece capturedPiece = board.getPieceAt(row, col);
+
             move.makeMove();
             gamePanel.revalidate();
             gamePanel.repaint();
-            if (selectedPiece.getColor().equals(Color)) {
-                gamePanel.getClient().sendToServer
-                        (gamePanel.getPlayerRole() + " moved " + selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
+
+            // Store the color before deselecting the piece
+            String pieceColor = selectedPiece.getColor();
+
+            // Send move to server
+            gamePanel.getClient().sendToServer
+                    (gamePanel.getPlayerRole() + " moved " + selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
+
+            // Deselect piece
+            selectedPiece = null;
+
+            // Update board
+            gamePanel.updateBoard();
+
+            // Check if a king was captured
+            if (capturedPiece != null && capturedPiece.getClass().getSimpleName().equals("King")) {
+                // The game is over, the current player wins
+                String winner = pieceColor;
+                // Show game over panel for the capturing player
+                gamePanel.getClient().getController().showGameOver(winner);
+                // Send game over message to opponent
+                gamePanel.getClient().sendToServer("Game Over! Winner: " + winner);
+                return;
             }
         } else {
             System.out.println("Invalid move.");
+            selectedPiece = null;
         }
-
-        // Deselect piece
-        selectedPiece = null;
-
-        // Update board
-        gamePanel.updateBoard();
     }
 
     public void handleOther(String msg) throws IOException {
+        // Check if this is a game over message
+        if (msg.startsWith("Game Over!")) {
+            String[] parts = msg.split(" ");
+            String winner = parts[3]; // The color of the winner
+            gamePanel.getClient().getController().showGameOver(winner);
+            return;
+        }
+
+        // Handle regular move messages
         String[] splitMsg = msg.split(" ");
         String[] startCoords = splitMsg[4].replace("[", "").replace("]", "").split(",");
         String[] endCoords = splitMsg[6].replace("[", "").replace("]", "").split(",");

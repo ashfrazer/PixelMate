@@ -28,7 +28,15 @@ public class Client extends AbstractClient {
         this.username = username;
         this.container = container;
         this.cardLayout = cardLayout;
-        this.board = new Board();
+        this.board = new Board(null);
+    }
+
+    public void setController(Controller controller) {
+        this.controller = controller;
+    }
+
+    public Controller getController() {
+        return controller;
     }
 
     public void handleMessageFromServer(Object msg) {
@@ -54,16 +62,40 @@ public class Client extends AbstractClient {
                     joinPanel.updateWaitingLabel(host);
                 }
             });
-
-        // Show board
+        } else if (message.equals("quit")) {
+            // Handle quit message by going to main menu
+            SwingUtilities.invokeLater(() -> {
+                if (controller != null) {
+                    cardLayout.show(container, "mainmenu");
+                }
+            });
         } else if (message.equals("start")) {
             SwingUtilities.invokeLater(() -> {
+                // Create a new board
+                board = new Board(controller);
                 if (gamePanel == null) {
                     gamePanel = new GamePanel(board, "client", this);
                     this.setGamePanel(gamePanel);
                     container.add(gamePanel, "game");
+                } else {
+                    // Update existing game panel with new board
+                    gamePanel = new GamePanel(board, gamePanel.getPlayerRole(), this);
+                    this.setGamePanel(gamePanel);
+                    // Remove old game panel
+                    container.remove(7);
+                    // Add new game panel
+                    container.add(gamePanel, "game");
                 }
                 cardLayout.show(container, "game");
+            });
+        } else if (message.startsWith("Game Over!")) {
+            // Handle game over message
+            String[] parts = message.split("Winner: ");
+            String winner = parts[1]; // The color of the winner
+            SwingUtilities.invokeLater(() -> {
+                if (controller != null) {
+                    controller.showGameOver(winner);
+                }
             });
         } else if (message.contains("[")) {
             String role = gamePanel != null ? gamePanel.getPlayerRole() : "";
@@ -79,7 +111,6 @@ public class Client extends AbstractClient {
                 });
             }
         }
-
     }
 
     public void setHostPanel(HostPanel hostPanel) {

@@ -41,7 +41,7 @@ public class MainGUI extends JFrame {
         Controller controller = new Controller(container);
 
         // Board
-        Board board = new Board();
+        Board board = new Board(controller);
 
         // Get player role
         String playerRole = controller.getPlayerRole();
@@ -56,6 +56,7 @@ public class MainGUI extends JFrame {
         container.add(new HostPanel(controller), "host");
         container.add(new JoinPanel(controller), "join");
         container.add(new GamePanel(board, playerRole, client), "game");
+        container.add(new GameOverPanel(controller, ""), "gameover");
 
         // Display Main Menu
         container.setPreferredSize(new Dimension(600, 600));
