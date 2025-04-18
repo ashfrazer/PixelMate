@@ -52,7 +52,6 @@ public class Board {
 
         // First check if it's the correct player's turn
         if (!piece.getColor().equals(currentTurn)) {
-            System.out.println("Not your turn! Current turn: " + currentTurn);
             return;
         }
 
@@ -71,7 +70,6 @@ public class Board {
 
             // Switch turns after a successful move
             switchTurn();
-            System.out.println("Turn switched to: " + currentTurn + " after " + piece.getColor() + " moved");
         }
     }
 
@@ -82,6 +80,11 @@ public class Board {
 
     public boolean isSquareUnderAttack(int row, int col, String color)
     {
+        // First check if the square is within bounds
+        if (!isWithinBounds(row, col)) {
+            return false;
+        }
+
         String opponentColor = color.equals("White") ? "Black" : "White";
 
         for(int i = 0; i < 8; i++)
@@ -109,20 +112,32 @@ public class Board {
     public boolean doesPutKingInCheck(Piece piece, int toRow, int toCol) {
         int fromRow = piece.getRow();
         int fromCol = piece.getCol();
-        Piece[][] b = board;
-        Piece captured = b[toRow][toCol];
 
-        //Simulates move
-        b[fromRow][fromCol] = null;
-        b[toRow][toCol] = piece;
+        // Create a copy of the board array
+        Piece[][] boardCopy = new Piece[8][8];
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                boardCopy[i][j] = board[i][j];
+            }
+        }
+
+        Piece captured = boardCopy[toRow][toCol];
+
+        // Simulates move on the copy
+        boardCopy[fromRow][fromCol] = null;
+        boardCopy[toRow][toCol] = piece;
+
+        // Temporarily update piece position
+        int originalRow = piece.getRow();
+        int originalCol = piece.getCol();
         piece.setPosition(toRow, toCol);
 
-        //Finds the King of respective color
+        // Finds the King of respective color
         String myColor = piece.getColor();
         int kingRow = -1, kingCol = -1;
         for (int r = 0; r < 8; r++) {
             for (int c = 0; c < 8; c++) {
-                Piece p = b[r][c];
+                Piece p = boardCopy[r][c];
                 if (p instanceof King && p.getColor().equals(myColor)) {
                     kingRow = r;
                     kingCol = c;
@@ -132,13 +147,19 @@ public class Board {
             if (kingRow != -1) break;
         }
 
-        //Checks to see if king is under attack (oh no!)
+        // Store the original board reference
+        Piece[][] originalBoard = board;
+        // Set the board to our copy temporarily
+        board = boardCopy;
+
+        // Checks to see if king is under attack
         boolean inCheck = isSquareUnderAttack(kingRow, kingCol, myColor);
 
-        //Undo move
-        b[fromRow][fromCol] = piece;
-        piece.setPosition(fromRow, fromCol);
-        b[toRow][toCol] = captured;
+        // Restore the original board
+        board = originalBoard;
+
+        // Restore piece's original position
+        piece.setPosition(originalRow, originalCol);
 
         return inCheck;
     }
