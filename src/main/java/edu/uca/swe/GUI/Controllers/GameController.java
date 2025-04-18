@@ -52,6 +52,12 @@ public class GameController implements ActionListener {
             }
         }
 
+        // If player is host (white), flip the coordinates
+        if (gamePanel.getPlayerRole().equals("host")) {
+            row = 7 - row;
+            col = 7 - col;
+        }
+
         //First click will select the game piece
         //second click will execute move and deselect piece
         if(selectedPiece == null) {

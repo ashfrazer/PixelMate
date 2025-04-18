@@ -42,54 +42,56 @@ public class GamePanel extends JPanel {
 
         // Set layout and arrange board
         setLayout(new BorderLayout());
-        //board = new Board();
         tileButtons = new JButton[8][8];
 
         boardPanel = new JPanel(new GridLayout(8, 8));
         boardPanel.setPreferredSize(new Dimension(600, 610));
 
-        // Initialize pieces
-        Piece[][] pieces = board.getBoard();
-
         // Initialize tiles
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
                 JButton tile = new JButton();
-                tile.setOpaque(true);
-                tile.setBorderPainted(false);
+                tile.setBackground((row + col) % 2 == 0 ? LIGHT_GREEN : DARK_GREEN);
+                tile.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
+                tile.addActionListener(gameController);
 
-                // Set colors of tiles
-                if ((row + col) % 2 == 0) {
-                    tile.setBackground(CREAM);
-                } else {
-                    tile.setBackground(BROWN);
-                }
+                // Store tiles in normal positions
+                tileButtons[row][col] = tile;
+                boardPanel.add(tile);
+            }
+        }
 
-                // Set piece icon
+        // Initialize pieces
+        Piece[][] pieces = board.getBoard();
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                JButton tile = tileButtons[row][col];
                 Piece piece = pieces[row][col];
+
                 if (piece != null) {
                     String color = piece.getColor().toLowerCase();
                     String type = piece.getClass().getSimpleName().toLowerCase();
                     String path = "src/main/java/edu/uca/swe/Icons/" + type + "_" + color + ".png";
                     File imgFile = new File(path);
+
                     if (imgFile.exists()) {
                         ImageIcon icon = new ImageIcon(imgFile.getAbsolutePath());
                         Image scaled = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
                         tile.setIcon(new ImageIcon(scaled));
                     }
+                } else {
+                    tile.setIcon(null);
                 }
-
-                // Add button to panel
-                tileButtons[row][col] = tile;
-                tile.addActionListener(gameController);
-                boardPanel.add(tile);
             }
         }
 
-        // Add panel to main board
+        // Add board to panel
         add(boardPanel, BorderLayout.CENTER);
 
         setBoardPanel(boardPanel);
+
+        // Update the board to ensure correct initial display
+        updateBoard();
     }
 
     public void updateBoard() {
@@ -97,7 +99,11 @@ public class GamePanel extends JPanel {
         Piece[][] pieces = board.getBoard();
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
-                JButton tile = tileButtons[row][col];
+                // If player is host (white), flip the display coordinates
+                int displayRow = playerRole.equals("host") ? 7 - row : row;
+                int displayCol = playerRole.equals("host") ? 7 - col : col;
+
+                JButton tile = tileButtons[displayRow][displayCol];
                 Piece piece = pieces[row][col];
 
                 if (piece != null) {
