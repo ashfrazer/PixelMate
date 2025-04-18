@@ -1,6 +1,6 @@
-package edu.uca.swe.Game.Pieces;
-
 import edu.uca.swe.Game.Board;
+import edu.uca.swe.Game.Pieces.Knight;
+import edu.uca.swe.Game.Pieces.Pawn;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
