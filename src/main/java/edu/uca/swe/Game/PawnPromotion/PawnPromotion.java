@@ -19,6 +19,8 @@ public class PawnPromotion {
 
     //Promotion logic
     public void promotePawn(){
+        System.out.println("Attempting to promote: " + pawn.getClass().getSimpleName());
+
         // If pawn is null then return error
         if (pawn == null) {
             System.out.println("Promotion failed: missing pawn.");
@@ -26,7 +28,7 @@ public class PawnPromotion {
         }
 
         // Ensures selected piece is a pawn if not produces an error
-        if (!pawn.getClass().getSimpleName().equals("TheMightyPawn")) {
+        if (!pawn.getClass().getSimpleName().equals("Pawn")) {
             System.out.println("Cannot promote: Selected piece is not a pawn.");
             return;
         }
@@ -34,6 +36,8 @@ public class PawnPromotion {
         int row = pawn.getRow();
         int col = pawn.getCol();
         String color = pawn.getColor();
+
+        System.out.println("Pawn at [" + row + "," + col + "] of color " + color);
 
         // Checks if pawn reached the final rank
         boolean reachedEnd = (color.equalsIgnoreCase("White") && row == 0)
@@ -68,7 +72,7 @@ public class PawnPromotion {
             case "queen" -> new Queen(color, row, col);
             case "rook" -> new Rook(color, row, col);
             case "bishop" -> new Bishop(color, row, col);
-            case "horsey" -> new Knight(color, row, col); // Knight = Horsey
+            case "knight" -> new Knight(color, row, col);
             default -> new Queen(color, row, col);
         };
     }

@@ -8,7 +8,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.function.Consumer;
 
 /**
  * This class is a popup that appears when a pawn reaches the end of the board
@@ -64,7 +63,7 @@ public class PawnPromotionPopup extends JDialog {
         addPieceButton("Queen", color, buttonPanel);
         addPieceButton("Rook", color, buttonPanel);
         addPieceButton("Bishop", color, buttonPanel);
-        addPieceButton("Horsey", color, buttonPanel);
+        addPieceButton("Knight", color, buttonPanel);
 
         // Adds everything to the dialog and displays
         mainPanel.add(buttonPanel, BorderLayout.CENTER);
