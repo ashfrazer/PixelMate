@@ -136,7 +136,7 @@ public class Controller implements ActionListener {
 
             // Prompt user to enter IP address to host game on (ipconfig LOCAL IP address)
             String serverIP = JOptionPane.showInputDialog(container, "Enter the server IP address:",
-                    "Host Game", JOptionPane.QUESTION_MESSAGE);
+                    "Host Game", JOptionPane.PLAIN_MESSAGE);
 
             if (serverIP != null && !serverIP.trim().isEmpty()) {
                 try {
@@ -164,7 +164,7 @@ public class Controller implements ActionListener {
 
             // Prompt user to enter local IP to join game on
             String serverIP = JOptionPane.showInputDialog(container, "Enter the server IP address:",
-                    "Join Game", JOptionPane.QUESTION_MESSAGE);
+                    "Join Game", JOptionPane.PLAIN_MESSAGE);
 
             if (serverIP != null && !serverIP.trim().isEmpty()) {
                 try {

@@ -10,9 +10,6 @@ public class Pawn extends Piece {
         super(startRow,startCol,color);
     }
 
-
-    public String toString(){return "p";}
-
     @Override
     public boolean isValidMove(int toRow, int toCol, Board board) {
         int fromRow = getRow();

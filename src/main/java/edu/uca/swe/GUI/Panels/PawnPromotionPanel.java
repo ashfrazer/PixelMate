@@ -10,11 +10,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-/**
- * This class is a popup that appears when a pawn reaches the end of the board
- * and must be promoted. The player can choose between Queen, Rook, Bishop, or Knight
- */
-
 public class PawnPromotionPanel extends JDialog {
     private final Color BROWN;
     private final Color DARK_GREEN;
