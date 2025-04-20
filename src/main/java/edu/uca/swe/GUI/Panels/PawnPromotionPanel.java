@@ -39,7 +39,7 @@ public class PawnPromotionPanel extends JDialog {
         this.setTitle("Pawn Promotion");
         this.setSize(500, 300);
         this.setLocationRelativeTo(null);
-        this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.setResizable(false);
 
         // Main panel
@@ -70,6 +70,7 @@ public class PawnPromotionPanel extends JDialog {
         addPieceButton("Knight", color, piecesPanel);
 
         mainPanel.add(piecesPanel, BorderLayout.CENTER);
+
         System.out.println("DEBUG: PawnPromotionPanel UI setup complete");
     }
 
