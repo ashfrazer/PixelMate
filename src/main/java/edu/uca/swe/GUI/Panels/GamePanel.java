@@ -44,8 +44,9 @@ public class GamePanel extends JPanel {
         setLayout(new BorderLayout());
         tileButtons = new JButton[8][8];
 
-        boardPanel = new JPanel(new GridLayout(8, 8));
-        boardPanel.setPreferredSize(new Dimension(600, 610));
+        boardPanel = new JPanel(new GridLayout(8, 8, 0, 0));
+        boardPanel.setPreferredSize(new Dimension(600, 660));
+        boardPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         // Initialize tiles
         for (int row = 0; row < 8; row++) {
@@ -54,6 +55,7 @@ public class GamePanel extends JPanel {
                 tile.setBackground((row + col) % 2 == 0 ? LIGHT_GREEN : DARK_GREEN);
                 tile.setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
                 tile.addActionListener(gameController);
+                tile.setMargin(new Insets(0, 0, 0, 0));
 
                 // Store tiles in normal positions
                 tileButtons[row][col] = tile;
@@ -76,7 +78,7 @@ public class GamePanel extends JPanel {
 
                     if (imgFile.exists()) {
                         ImageIcon icon = new ImageIcon(imgFile.getAbsolutePath());
-                        Image scaled = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                        Image scaled = icon.getImage().getScaledInstance(63, 63, Image.SCALE_SMOOTH);
                         tile.setIcon(new ImageIcon(scaled));
                     }
                 } else {
@@ -114,7 +116,7 @@ public class GamePanel extends JPanel {
 
                     if (imgFile.exists()) {
                         ImageIcon icon = new ImageIcon(imgFile.getAbsolutePath());
-                        Image scaled = icon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH);
+                        Image scaled = icon.getImage().getScaledInstance(63, 63, Image.SCALE_SMOOTH);
                         tile.setIcon(new ImageIcon(scaled));
                     }
                 } else {

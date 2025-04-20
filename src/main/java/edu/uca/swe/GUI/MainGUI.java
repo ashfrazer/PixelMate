@@ -59,9 +59,9 @@ public class MainGUI extends JFrame {
         container.add(new GameOverPanel(controller, ""), "gameover");
 
         // Display Main Menu
-        container.setPreferredSize(new Dimension(600, 600));
-        container.setMinimumSize(new Dimension(600, 600));
-        container.setMaximumSize(new Dimension(600, 600));
+        container.setPreferredSize(new Dimension(620, 680));
+        container.setMinimumSize(new Dimension(620, 680));
+        container.setMaximumSize(new Dimension(620, 680));
         cardLayout.show(container, "mainmenu");
 
         // Make background dark green
@@ -72,7 +72,7 @@ public class MainGUI extends JFrame {
         // Configure JFrame
         this.setLayout(new GridBagLayout());
         this.add(container);
-        this.setSize(600, 600);
+        this.setSize(620, 680);
         this.setVisible(true);
     }
 

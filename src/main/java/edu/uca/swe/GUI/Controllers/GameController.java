@@ -2,8 +2,10 @@ package edu.uca.swe.GUI.Controllers;
 
 import edu.uca.swe.Game.Board;
 import edu.uca.swe.Game.Move;
-import edu.uca.swe.Game.Pieces.Piece;
+import edu.uca.swe.Game.PawnPromotion.PawnPromotion;
+import edu.uca.swe.Game.Pieces.*;
 import edu.uca.swe.GUI.Panels.GamePanel;
+import edu.uca.swe.GUI.Panels.PawnPromotionPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -97,12 +99,75 @@ public class GameController implements ActionListener {
             gamePanel.revalidate();
             gamePanel.repaint();
 
+            // Check for pawn promotion
+            if (selectedPiece instanceof Pawn && (row == 0 || row == 7)) {
+                System.out.println("DEBUG: Pawn promotion condition met");
+                System.out.println("DEBUG: Selected piece is " + selectedPiece.getClass().getSimpleName());
+                System.out.println("DEBUG: Current position: row=" + row + ", col=" + col);
+
+                // Capture values needed in the lambda
+                final String pieceColor = selectedPiece.getColor();
+                final int finalRow = row;
+                final int finalCol = col;
+                final int finalSelectedRow = selectedRow;
+                final int finalSelectedCol = selectedCol;
+                final String pieceString = selectedPiece.toString();
+
+                final PawnPromotion promotion = new PawnPromotion(selectedPiece, board);
+                System.out.println("DEBUG: Created PawnPromotion instance");
+
+                // Show promotion dialog and apply promotion on the EDT
+                SwingUtilities.invokeLater(() -> {
+                    System.out.println("DEBUG: Showing promotion dialog on EDT");
+                    try {
+                        String promotedPieceType = PawnPromotionPanel.showPromotionDialog(pieceColor);
+                        System.out.println("DEBUG: Promotion dialog returned: " + promotedPieceType);
+
+                        if (promotedPieceType != null) {
+                            System.out.println("DEBUG: Creating promoted piece: " + promotedPieceType);
+                            // Create the promoted piece
+                            Piece promotedPiece = promotion.createPromotedPiece(promotedPieceType, pieceColor, finalRow, finalCol);
+                            if (promotedPiece != null) {
+                                System.out.println("DEBUG: Successfully created promoted piece");
+                                // Remove the pawn
+                                board.removePiece(finalRow, finalCol);
+                                // Set the new piece
+                                board.setPieceAt(finalRow, finalCol, promotedPiece);
+
+                                // Send move to server with promotion information
+                                gamePanel.getClient().sendToServer(
+                                        gamePanel.getPlayerRole() + " moved " + pieceString +
+                                                " at [" + finalSelectedRow + "," + finalSelectedCol + "] to [" + finalRow + "," + finalCol +
+                                                "] and promoted to " + promotedPieceType
+                                );
+
+                                // Update the board display
+                                gamePanel.updateBoard();
+                                gamePanel.revalidate();
+                                gamePanel.repaint();
+                                System.out.println("DEBUG: Promotion completed successfully");
+                            } else {
+                                System.out.println("DEBUG: Failed to create promoted piece");
+                            }
+                        } else {
+                            System.out.println("DEBUG: No piece type selected from dialog");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("DEBUG: Exception during promotion: " + e.getMessage());
+                        e.printStackTrace();
+                    }
+                });
+            } else {
+                System.out.println("DEBUG: Not a promotion move");
+                // Send regular move to server
+                gamePanel.getClient().sendToServer(
+                        gamePanel.getPlayerRole() + " moved " + selectedPiece.toString() +
+                                " at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]"
+                );
+            }
+
             // Store the color before deselecting the piece
             String pieceColor = selectedPiece.getColor();
-
-            // Send move to server
-            gamePanel.getClient().sendToServer
-                    (gamePanel.getPlayerRole() + " moved " + selectedPiece.toString() +" at [" + selectedRow + "," + selectedCol + "] to [" + row + "," + col + "]");
 
             // Deselect piece
             selectedPiece = null;
@@ -150,6 +215,26 @@ public class GameController implements ActionListener {
             Move move = new Move(board, selectedPiece, startRow, startCol, endRow, endCol);
             if (move.isValid()) {
                 move.makeMove();
+
+                // Check if this move includes a promotion
+                if (splitMsg.length > 8 && splitMsg[7].equals("and") && splitMsg[8].equals("promoted")) {
+                    String promotedPieceType = splitMsg[10];
+                    PawnPromotion promotion = new PawnPromotion(selectedPiece, board);
+
+                    // Create the appropriate piece based on the promotion type
+                    Piece promotedPiece = promotion.createPromotedPiece(
+                            promotedPieceType,
+                            selectedPiece.getColor(),
+                            endRow,
+                            endCol
+                    );
+
+                    if (promotedPiece != null) {
+                        board.removePiece(endRow, endCol);
+                        board.setPieceAt(endRow, endCol, promotedPiece);
+                    }
+                }
+
                 gamePanel.updateBoard();
                 gamePanel.revalidate();
                 gamePanel.repaint();

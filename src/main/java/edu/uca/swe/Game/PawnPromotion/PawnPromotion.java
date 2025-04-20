@@ -1,8 +1,7 @@
 package edu.uca.swe.Game.PawnPromotion;
 
-
 import edu.uca.swe.Game.Board;
-import edu.uca.swe.GUI.Panels.PawnPromotionPopup;
+import edu.uca.swe.GUI.Panels.PawnPromotionPanel;
 import edu.uca.swe.Game.Pieces.*;
 
 import javax.swing.*;
@@ -46,7 +45,7 @@ public class PawnPromotion {
         if (reachedEnd) {
             SwingUtilities.invokeLater(() -> {
                 // Shows promotion popup and gets selected piece type
-                String selectedType = PawnPromotionPopup.showPromotionDialog(color);
+                String selectedType = PawnPromotionPanel.showPromotionDialog(color);
                 // Creates new piece based on selected type
                 pieceChoice = createPromotedPiece(selectedType, color, row, col);
                 // Replace pawn on the board with new piece
@@ -67,7 +66,7 @@ public class PawnPromotion {
     }
 
     // Creates new piece based on user selection
-    private Piece createPromotedPiece(String type, String color, int row, int col) {
+    public Piece createPromotedPiece(String type, String color, int row, int col) {
         return switch (type.toLowerCase()) {
             case "queen" -> new Queen(color, row, col);
             case "rook" -> new Rook(color, row, col);
