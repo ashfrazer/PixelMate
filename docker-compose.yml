@@ -22,7 +22,7 @@ services:
     depends_on:
       - mariadb
     ports:
-      - "8080:8080"
+      - "5555:5555"
     environment:
       - DB_URL=jdbc:mysql://mariadb:3306/pixelmate_login
       - DB_USER=player
